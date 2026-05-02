@@ -28,16 +28,16 @@ return {
                nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
                nmap("grr", function()
                   Snacks.picker.lsp_references()
-               end, "References")
+               end, "[G]oto [R]eferences")
                nmap("gI", function()
                   Snacks.picker.lsp_implementations()
-               end, "Implementations")
+               end, "[G]oto [I]mplementation")
                nmap("<leader>ds", function()
                   Snacks.picker.lsp_symbols()
-               end, "Document Symbols")
+               end, "[D]ocument [S]ymbols")
                nmap("<leader>ws", function()
                   Snacks.picker.lsp_workspace_symbols()
-               end, "Workspace Symbols")
+               end, "[W]orkspace [S]ymbols")
 
                -- See `:help K` for why this keymap
                nmap("K", vim.lsp.buf.hover, "Hover Documentation")
@@ -46,12 +46,12 @@ return {
                -- nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
                -- Lesser used LSP functionality
-               nmap("gD", vim.lsp.buf.declaration, "Goto Declaration")
-               nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "Add Workspace Folder")
-               nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "Remove Workspace Folder")
+               nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+               nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
+               nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
                nmap("<leader>wl", function()
                   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-               end, "List Workspace Folders")
+               end, "[W]orkspace [L]ist Folders")
 
                -- Create a command `:Format` local to the LSP buffer
                vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)

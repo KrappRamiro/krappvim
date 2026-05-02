@@ -10,10 +10,10 @@ return {
       require("which-key").setup({})
       require("which-key").add({
          { "gr", group = "LSP" },
-         { "gra", desc = "Code Action" },
-         { "grn", desc = "Rename" },
-         { "gri", desc = "Implementations" },
-         { "grx", desc = "Codelens Run" },
+         { "gra", desc = "[C]ode [A]ction" },
+         { "grn", desc = "[R]e[n]ame" },
+         { "gri", desc = "[G]oto [I]mplementation" },
+         { "grx", desc = "[C]odelens [R]un" },
 
          { "<leader><leader>", group = "buffer commands" },
          { "<leader><leader>_", hidden = true },
