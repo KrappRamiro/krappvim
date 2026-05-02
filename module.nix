@@ -126,7 +126,7 @@ inputs: {
       imagemagick # provides magick and convert, snacks  uses them to display images inside neovim
       ghostscript # provides gs, used to render pdf files
       tectonic # renders LaTeX math expressions
-      nodePackages.mermaid-cli # provides mmdc
+      mermaid-cli # provides mmdc
     ];
     # this `lazy = true` definition will transfer to specs in the contained DAL, if there is one.
     # This is because the definition of lazy in `config.specMods` checks `parentSpec.lazy or false`

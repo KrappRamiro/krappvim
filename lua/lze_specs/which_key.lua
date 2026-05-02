@@ -9,6 +9,12 @@ return {
    after = function(plugin)
       require("which-key").setup({})
       require("which-key").add({
+         { "gr", group = "LSP" },
+         { "gra", desc = "Code Action" },
+         { "grn", desc = "Rename" },
+         { "gri", desc = "Implementations" },
+         { "grx", desc = "Codelens Run" },
+
          { "<leader><leader>", group = "buffer commands" },
          { "<leader><leader>_", hidden = true },
 

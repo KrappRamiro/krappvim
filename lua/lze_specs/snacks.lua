@@ -80,6 +80,13 @@ return {
                { section = "header" },
                { section = "keys", gap = 1, padding = 1 },
                { section = "recent_files", indent = 2, padding = 1 },
+               {
+                  text = {
+                     { "Neovim v" .. tostring(vim.version()), hl = "SnacksDashboardFooter" },
+                  },
+                  align = "center",
+                  padding = 1,
+               },
             },
          },
          -- make sure lazygit always reopens the correct program
