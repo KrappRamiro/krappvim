@@ -55,6 +55,33 @@ return {
             },
             refresh = 50, -- refresh at most every 50ms
          },
+         dashboard = {
+            preset = {
+               header = [[
+ ██ ▄█▀ ██▀███   ▄▄▄       ██▓███   ██▓███      ██▒   █▓ ██▓ ███▄ ▄███▓
+ ██▄█▒ ▓██ ▒ ██▒▒████▄    ▓██░  ██▒▓██░  ██▒   ▓██░   █▒▓██▒▓██▒▀█▀ ██▒
+▓███▄░ ▓██ ░▄█ ▒▒██  ▀█▄  ▓██░ ██▓▒▓██░ ██▓▒    ▓██  █▒░▒██▒▓██    ▓██░
+▓██ █▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██▄█▓▒ ▒▒██▄█▓▒ ▒     ▒██ █░░░██░▒██    ▒██
+▒██▒ █▄░██▓ ▒██▒ ▓█   ▓██▒▒██▒ ░  ░▒██▒ ░  ░      ▒▀█░  ░██░▒██▒   ░██▒
+▒ ▒▒ ▓▒░ ▒▓ ░▒▓░ ▒▒   ▓▒█░▒▓▒░ ░  ░▒▓▒░ ░  ░      ░ ▐░  ░▓  ░ ▒░   ░  ░
+░ ░▒ ▒░  ░▒ ░ ▒░  ▒   ▒▒ ░░▒ ░     ░▒ ░           ░ ░░   ▒ ░░  ░      ░
+░ ░░ ░   ░░   ░   ░   ▒   ░░       ░░               ░░   ▒ ░░      ░
+░  ░      ░           ░  ░                           ░   ░         ░
+                                                    ░                  ]],
+               keys = {
+                  { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.picker.smart()" },
+                  { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+                  { icon = " ", key = "g", desc = "Grep", action = ":lua Snacks.picker.grep()" },
+                  { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
+                  { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+               },
+            },
+            sections = {
+               { section = "header" },
+               { section = "keys", gap = 1, padding = 1 },
+               { section = "recent_files", indent = 2, padding = 1 },
+            },
+         },
          -- make sure lazygit always reopens the correct program
          -- hopefully this can be removed one day
          lazygit = {
