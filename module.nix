@@ -140,6 +140,7 @@ inputs: {
         # You can override defaults from the parent spec here
         lazy = false;
       }
+      mini-nvim # Collection of plugins, https://nvim-mini.org/mini.nvim/
       snacks-nvim
       nvim-lspconfig
       nvim-surround
