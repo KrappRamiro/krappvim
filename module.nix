@@ -40,7 +40,7 @@ inputs: {
     type = lib.types.str;
     default = "onedark_dark";
   };
-  config.settings.colorscheme = "moonfly"; # <- just demonstrating that it is an option
+  config.settings.colorscheme = "gruvbox"; # <- just demonstrating that it is an option
   # and grab it in lua with `require(vim.g.nix_info_plugin_name)("onedark_dark", "settings", "colorscheme") == "moonfly"`
   config.specs.colorscheme = {
     lazy = true;
@@ -51,6 +51,7 @@ inputs: {
         "onedark" = onedarkpro-nvim;
         "onelight" = onedarkpro-nvim;
         "moonfly" = vim-moonfly-colors;
+        "gruvbox" = gruvbox-nvim;
       }
     );
   };

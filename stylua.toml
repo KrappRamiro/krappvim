@@ -1,1 +1,3 @@
 column_width = 100
+indent_width = 3 # Dont look weird at me, its the official width recommended via LuaRocks
+indent_type = "Spaces"
