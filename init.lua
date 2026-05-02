@@ -208,4 +208,5 @@ nixInfo.lze.load({
    { import = "lze_specs.lualine" },
    { import = "lze_specs.gitsigns" },
    { import = "lze_specs.which_key" },
+   { import = "lze_specs.grug_far" },
 })

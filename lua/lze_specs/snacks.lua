@@ -8,8 +8,9 @@ return {
    -- unless otherwise specified by a particular handler
    priority = 1000,
    after = function(plugin)
-      -- I also like this color
+      -- Define colors for indent
       vim.api.nvim_set_hl(0, "MySnacksIndent", { fg = "#32a88f" })
+
       require("snacks").setup({
          -- File explorer
          explorer = {
@@ -26,13 +27,15 @@ return {
          },
          git = {},
          terminal = {},
+         -- detects the "scope" your cursor is currently inside (a function body, an if block, a loop, etc.)
+         -- It doesn't do anything visible on its own. It's used by the indent module to know which indentation guide line to highlight as "current."
          scope = {},
          indent = {
             scope = {
                hl = "MySnacksIndent",
             },
             chunk = {
-               -- enabled = true,
+               enabled = true,
                hl = "MySnacksIndent",
             },
          },
@@ -45,6 +48,9 @@ return {
             },
             git = {
                -- patterns to match Git signs
+               -- Snacks doesn't hardcode which plugin provides git signs.
+               -- It looks for highlight groups matching these patterns to know "this sign is a git sign".
+               -- It supports both gitsigns.nvim (GitSign) and mini.diff (MiniDiffSign)
                patterns = { "GitSign", "MiniDiffSign" },
             },
             refresh = 50, -- refresh at most every 50ms

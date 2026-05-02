@@ -157,6 +157,7 @@ inputs: {
       nvim-lint
       conform-nvim
       nvim-treesitter-textobjects
+      grug-far-nvim
       # treesitter + grammars
       nvim-treesitter.withAllGrammars
       # This is for if you only want some of the grammars
