@@ -14,6 +14,13 @@ return {
             lualine_c = {
                { "filename", path = 1, status = true },
             },
+            lualine_x = {
+               {
+                  -- shows "recording @q" when recording a macro
+                  function() return require("noice").api.status.mode.get() end,
+                  cond = function() return require("noice").api.status.mode.has() end,
+               },
+            },
          },
          inactive_sections = {
             lualine_b = {

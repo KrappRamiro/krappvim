@@ -25,6 +25,10 @@ return {
                },
             },
          },
+         -- Importante tenerlo habilitado! porque lo use noice para redirigir las notificaciones
+         notifier = {
+            enabled = true,
+         },
          git = {},
          terminal = {},
          -- detects the "scope" your cursor is currently inside (a function body, an if block, a loop, etc.)

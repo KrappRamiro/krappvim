@@ -147,8 +147,6 @@ inputs: {
       nvim-surround
       vim-startuptime
       blink-cmp
-      blink-compat
-      cmp-cmdline
       colorful-menu-nvim
       lualine-nvim
       gitsigns-nvim
@@ -158,6 +156,8 @@ inputs: {
       conform-nvim
       nvim-treesitter-textobjects
       grug-far-nvim
+      noice-nvim
+      nui-nvim
       # treesitter + grammars
       nvim-treesitter.withAllGrammars
       # This is for if you only want some of the grammars

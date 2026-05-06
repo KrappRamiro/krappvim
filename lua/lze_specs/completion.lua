@@ -1,16 +1,5 @@
 return {
    {
-      "cmp-cmdline",
-      auto_enable = true,
-      on_plugin = { "blink.cmp" },
-      load = nixInfo.lze.loaders.with_after,
-   },
-   {
-      "blink.compat",
-      auto_enable = true,
-      dep_of = { "cmp-cmdline" },
-   },
-   {
       "colorful-menu.nvim",
       auto_enable = true,
       on_plugin = { "blink.cmp" },
@@ -21,31 +10,54 @@ return {
       event = "DeferredUIEnter",
       after = function(_)
          require("blink.cmp").setup({
-            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-            -- See :h blink-cmp-config-keymap for configuring keymaps
+            -- Default key mappings
+            -- <C-space> to open
+            --
+            -- <C-y> to accept
+            -- <C-e> to hide
+            --
+            -- <C-p> previous option
+            -- <C-n> next option
+            --
+            -- <C-k> show signature
+            --
+            -- <Tab> Snippet forward
+            -- <S-Tab> Snipper backward
             keymap = {
                preset = "default",
             },
+
+            -- en vim, cmdline" es cualquier cosa que abrís con una tecla especial que cambia el modo y te pone a escribir abajo (con noice, es un popup en el medio xd):
+            --   :  -->  comandos ex (:w, :q, :colorscheme, etc.)
+            --   /  -->  búsqueda hacia adelante
+            --   ?  -->  búsqueda hacia atrás
+            --   @  -->  ejecutar un macro (:@q por ejemplo)
+            --   !  -->  comandos de shell (:!ls)
+            --   =  -->  expresiones de Lua/Vimscript
             cmdline = {
                enabled = true,
                completion = {
                   menu = {
+                     -- con esto, no hace falta tocal <C-space> para que aparezca el menu de autocompletado
                      auto_show = true,
                   },
                },
+               -- Source selection for completion
                sources = function()
                   local type = vim.fn.getcmdtype()
-                  -- Search forward and backward
+                  -- When searching forward and/or backward, use the buffer as a source
                   if type == "/" or type == "?" then
                      return { "buffer" }
                   end
-                  -- Commands
+                  -- When typing comands, use the cmdline as a source
                   if type == ":" or type == "@" then
-                     return { "cmdline", "cmp_cmdline" }
+                     return { "cmdline" }
                   end
+                  -- And if there is no match, use nothing :(
                   return {}
                end,
             },
+
             fuzzy = {
                sorts = {
                   "exact",
@@ -54,6 +66,7 @@ return {
                   "sort_text",
                },
             },
+
             signature = {
                enabled = true,
                window = {
@@ -88,14 +101,6 @@ return {
                   },
                   lsp = {
                      score_offset = 40,
-                  },
-                  cmp_cmdline = {
-                     name = "cmp_cmdline",
-                     module = "blink.compat.source",
-                     score_offset = -100,
-                     opts = {
-                        cmp_name = "cmdline",
-                     },
                   },
                },
             },
