@@ -210,4 +210,5 @@ nixInfo.lze.load({
    { import = "lze_specs.which_key" },
    { import = "lze_specs.noice" },
    { import = "lze_specs.grug_far" },
+   { import = "lze_specs.tiny_inline_diagnostic" },
 })

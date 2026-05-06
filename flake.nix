@@ -13,6 +13,13 @@
     url = "github:BirdeeHub/lzextras";
     flake = false;
   };
+
+  # this one is not on nixpkgs
+  inputs.plugins-tiny-inline-diagnostic = {
+    url = "github:rachartier/tiny-inline-diagnostic.nvim";
+    flake = false;
+  };
+
   outputs =
     {
       self,

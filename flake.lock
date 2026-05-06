@@ -48,11 +48,28 @@
         "type": "github"
       }
     },
+    "plugins-tiny-inline-diagnostic": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776880179,
+        "narHash": "sha256-LpZuRNGSK8AHLTIPIWoQlGot89qubFRL/RZ+EMs4bnQ=",
+        "owner": "rachartier",
+        "repo": "tiny-inline-diagnostic.nvim",
+        "rev": "147af4e49f51dd48f41972de26552872b8ba7b25",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rachartier",
+        "repo": "tiny-inline-diagnostic.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
         "plugins-lze": "plugins-lze",
         "plugins-lzextras": "plugins-lzextras",
+        "plugins-tiny-inline-diagnostic": "plugins-tiny-inline-diagnostic",
         "wrappers": "wrappers"
       }
     },

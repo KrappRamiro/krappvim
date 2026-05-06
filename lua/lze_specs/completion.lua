@@ -58,6 +58,7 @@ return {
                end,
             },
 
+            -- Esta seccion controla como blink ordena los resultados del menu de completado
             fuzzy = {
                sorts = {
                   "exact",
@@ -67,15 +68,20 @@ return {
                },
             },
 
+            -- Muestra el signature de las funciones en el autocompletado, ta god
             signature = {
                enabled = true,
                window = {
                   show_documentation = true,
                },
             },
+
             completion = {
                menu = {
+                  -- Cada línea del menú de completado es un "ítem". Blink te deja controlar cómo se dibuja cada uno.
+                  -- con mi config, blink le delega ese trabajo a colorful-menu.nvim.
                   draw = {
+                     -- para los ítems del LSP, use treesitter para parsear y colorear el texto interno
                      treesitter = { "lsp" },
                      components = {
                         label = {
@@ -89,13 +95,24 @@ return {
                      },
                   },
                },
+               -- Cuando abrís el menú de completado y movés el cursor por las opciones,
+               -- a la derecha aparece un segundo popup con la documentación de esa opción.
                documentation = {
                   auto_show = true,
                },
             },
+
+            -- La lista de fuyentes que usa blink para generar sugerencias
             sources = {
-               default = { "lsp", "path", "buffer", "omni" },
+               default = {
+                  "lsp", -- sugerencias del LSP
+                  "path", -- rutas de archivo (./src , /home/ , etc...)
+                  "buffer", -- palabras que ya estan escritas en el buffer actual
+                  "omni", -- fuente generica de palabras de neovim
+               },
+
                providers = {
+                  -- el score_offset le agrega mas peso a una opcion que a otra
                   path = {
                      score_offset = 50,
                   },
