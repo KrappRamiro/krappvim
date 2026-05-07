@@ -2,10 +2,10 @@
 --
 -- Flow tipico:
 --   1. Parate sobre una palabra
---   2. <C-n> → selecciona la palabra + agrega un cursor en la PROXIMA ocurrencia
---   3. <C-n> de nuevo → otra ocurrencia más
---   4. Tipeás → editás todas a la vez
---   5. <Esc> → vuelve a un solo cursor
+--   2. <C-n> -> selecciona la palabra + agrega un cursor en la PROXIMA ocurrencia
+--   3. <C-n> de nuevo -> otra ocurrencia más
+--   4. Tipeás -> editás todas a la vez
+--   5. <Esc> -> vuelve a un solo cursor
 return {
    "multicursor.nvim",
    auto_enable = true,

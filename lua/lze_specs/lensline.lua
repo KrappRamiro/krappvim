@@ -4,10 +4,10 @@
 -- independiente.
 --
 -- Comandos relevantes (lensline expone dos niveles de toggle):
---   :LenslineToggleView    →  muestra/esconde el visual (providers siguen
---                             corriendo en background) — el más común
---   :LenslineToggleEngine  →  enable/disable completo (libera recursos)
---   :LenslineProfile <n>   →  cambiar entre profiles configurados acá
+--   :LenslineToggleView    ->  muestra/esconde el visual (providers siguen
+--                             corriendo en background) - el más común
+--   :LenslineToggleEngine  ->  enable/disable completo (libera recursos)
+--   :LenslineProfile <n>   ->  cambiar entre profiles configurados acá
 return {
    "lensline.nvim",
    auto_enable = true,

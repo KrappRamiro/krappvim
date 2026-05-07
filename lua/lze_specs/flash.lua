@@ -1,6 +1,6 @@
 -- flash.nvim: navegación con search labels (treesitter mode).
--- - S (n/x/o):  treesitter  →  selecciona el nodo más cercano del árbol
--- - r (o):      remote      →  motion en una ubicación remota (avanzado)
+-- - S (n/x/o):  treesitter  ->  selecciona el nodo más cercano del árbol
+-- - r (o):      remote      ->  motion en una ubicación remota (avanzado)
 -- - R (o/x):    treesitter search
 -- - <c-s> (c):  toggle flash mientras buscás con / o ?
 -- (HopWord ocupa la `s` para jumps simples, ver lze_specs/hop.lua)
@@ -8,9 +8,9 @@ return {
    "flash.nvim",
    auto_enable = true,
    keys = {
-      { "S", mode = { "n", "x", "o" } },
-      { "r", mode = "o" },
-      { "R", mode = { "o", "x" } },
+      { "S",     mode = { "n", "x", "o" } },
+      { "r",     mode = "o" },
+      { "R",     mode = { "o", "x" } },
       { "<c-s>", mode = "c" },
    },
    after = function()

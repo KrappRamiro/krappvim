@@ -10,8 +10,8 @@ return {
          menu = {
             keymaps = {
                -- navegación vim-style entre menús/submenús:
-               --   h  →  cerrar el menú actual (volver al padre)
-               --   l  →  abrir el item bajo el cursor (entrar al hijo)
+               --   h  ->  cerrar el menú actual (volver al padre)
+               --   l  ->  abrir el item bajo el cursor (entrar al hijo)
                -- el `<C-w>q` para `h` reusa el mismo handler que el `q`
                -- por default. Para `l` replicamos la lógica del `<CR>`.
                ["h"] = "<C-w>q",

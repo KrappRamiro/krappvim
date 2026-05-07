@@ -1,8 +1,8 @@
 -- ccc.nvim: color picker + highlighter para colores hex/rgb/hsl/etc.
--- - :CccPick               →  UI con sliders, elegís color, lo inserta
--- - :CccConvert            →  convierte entre formatos (HEX ↔ RGB ↔ HSL)
--- - :CccHighlighterToggle  →  toggle del highlighter inline (lo dejamos OFF
---                              porque tenemos colorizer haciendo lo mismo)
+-- - :CccPick               -->  UI con sliders, elegís color, lo inserta
+-- - :CccConvert            -->  convierte entre formatos (HEX ↔ RGB ↔ HSL)
+-- - :CccHighlighterToggle  -->  toggle del highlighter inline (lo dejamos OFF porque tenemos colorizer haciendo lo mismo)
+
 return {
    "ccc.nvim",
    auto_enable = true,
@@ -109,7 +109,7 @@ return {
          -- Polling: cada 200ms chequeamos si la window de ccc sigue viva.
          -- Cuando deja de existir (por el camino que sea: q, <CR>, click
          -- afuera, otro plugin la cerró, etc.) cerramos el cheatsheet.
-         -- Latencia: hasta 200ms — imperceptible. Más confiable que stackear
+         -- Latencia: hasta 200ms - imperceptible. Más confiable que stackear
          -- WinClosed/WinLeave/BufHidden, que dependen de cómo ccc cierra.
          poll_timer = vim.uv.new_timer()
          poll_timer:start(200, 200, vim.schedule_wrap(function()

@@ -258,7 +258,7 @@ return {
             --     greet("Alice", 30)
             -- Con inlay hints ves:
             --     greet(name: "Alice", age: 30)
-            --            ↑              ↑
+            --            ^              ^
             --            gris           gris
             --            (no están realmente en el archivo)
 

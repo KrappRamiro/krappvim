@@ -23,7 +23,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves Line Up" })
 -- Better scrolling: cursor centrado sin pelear con la animación de snacks.scroll.
 -- En vez de `<C-d>zz` (que tiene race condition con el smooth scroll), levantamos
 -- `scrolloff` a 999 antes del scroll así vim mantiene el cursor centrado de
--- forma nativa — snacks anima sin conflicto. Después restauramos a 10.
+-- forma nativa - snacks anima sin conflicto. Después restauramos a 10.
 -- Ver https://github.com/folke/snacks.nvim/discussions/1030#discussioncomment-12109404
 vim.keymap.set("n", "<C-d>", function()
    vim.wo.scrolloff = 999

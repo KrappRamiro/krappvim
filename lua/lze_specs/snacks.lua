@@ -24,7 +24,7 @@ return {
       vim.api.nvim_set_hl(0, "MySnacksIndent", { fg = "#32a88f" })
 
       -- milli.nvim: animated ASCII splash para el dashboard.
-      -- Cargamos el primer frame para usarlo como header "anchor" — milli
+      -- Cargamos el primer frame para usarlo como header "anchor" - milli
       -- lo necesita para localizar dónde animar después del setup.
       -- El nombre del splash tiene que coincidir con el de milli.snacks() abajo.
       local SPLASH = "blackhole"
