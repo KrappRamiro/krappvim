@@ -1,5 +1,17 @@
 -- If you ask yourself "hey, why are you returning an object", its because this will be loaded by lze specs. and lze specs expects an object
 return {
+   -- milli.nvim: animated ASCII splash usado por el dashboard de snacks abajo.
+   -- Lo cargamos eager con priority > snacks (1000) para garantizar que
+   -- esté en runtimepath antes de que snacks corra su `after` y lo requiera.
+   -- Spec name "milli" (no "milli.nvim") porque lze matchea por exact name
+   -- en su on_require hook.
+   {
+      "milli",
+      auto_enable = true,
+      lazy = false,
+      priority = 1001,
+   },
+   {
    "snacks.nvim",
    auto_enable = true,
    -- snacks makes a global, and then lazily loads itself
@@ -11,7 +23,38 @@ return {
       -- Define colors for indent
       vim.api.nvim_set_hl(0, "MySnacksIndent", { fg = "#32a88f" })
 
+      -- milli.nvim: animated ASCII splash para el dashboard.
+      -- Cargamos el primer frame para usarlo como header "anchor" — milli
+      -- lo necesita para localizar dónde animar después del setup.
+      -- El nombre del splash tiene que coincidir con el de milli.snacks() abajo.
+      local SPLASH = "blackhole"
+      local milli_splash = require("milli").load({ splash = SPLASH })
+      local splash_header = table.concat(milli_splash.frames[1], "\n")
+
       require("snacks").setup({
+         -- Detecta archivos grandes (>1.5MB por default) y desactiva treesitter,
+         -- LSP, indent guides, etc. para que no se cuelgue al abrir un log enorme.
+         bigfile = {},
+         -- Renderiza el archivo antes de cargar plugins lentos (treesitter, LSP).
+         -- `nvim foo.lua` se siente instantáneo aunque el resto del setup tarde.
+         quickfile = {},
+         -- Reemplaza `vim.ui.input` (los prompts feos del default, ej: rename de
+         -- LSP) con un float lindo.
+         input = {},
+         -- Resalta automáticamente las referencias del símbolo bajo el cursor
+         -- vía LSP. `]]` y `[[` saltan entre ellas.
+         words = {},
+         -- Smooth scrolling para `<C-d>`, `<C-u>`, `<C-f>`, `<C-b>`, `gg`, `G`, etc.
+         scroll = {},
+         -- Abrir el archivo / línea / commit / repo actual en el browser (GitHub).
+         -- Keymap: `<leader>gB` (n + v).
+         gitbrowse = {},
+         -- LSP-integrated file rename: actualiza imports en otros archivos.
+         -- Keymap: `<leader>cR`.
+         rename = {},
+         -- Image viewer dentro de Neovim (markdown, LaTeX, etc.). Solo funciona
+         -- en kitty / wezterm / ghostty. Necesita `imagemagick` (ya en module.nix).
+         image = {},
          -- File explorer
          explorer = {
             replace_netrw = true,
@@ -34,6 +77,8 @@ return {
          -- detects the "scope" your cursor is currently inside (a function body, an if block, a loop, etc.)
          -- It doesn't do anything visible on its own. It's used by the indent module to know which indentation guide line to highlight as "current."
          scope = {},
+         -- dims inactive scopes to focus on the current one. Toggled via <leader>tD.
+         dim = {},
          indent = {
             scope = {
                hl = "MySnacksIndent",
@@ -44,11 +89,11 @@ return {
             },
          },
          statuscolumn = {
-            left = { "mark", "git" }, -- priority of signs on the left (high to low)
+            left = { "mark", "git" },   -- priority of signs on the left (high to low)
             right = { "sign", "fold" }, -- priority of signs on the right (high to low)
             folds = {
-               open = false, -- show open fold icons
-               git_hl = false, -- use Git Signs hl for fold icons
+               open = false,            -- show open fold icons
+               git_hl = false,          -- use Git Signs hl for fold icons
             },
             git = {
                -- patterns to match Git signs
@@ -61,28 +106,24 @@ return {
          },
          dashboard = {
             preset = {
-               header = [[
- ██ ▄█▀ ██▀███   ▄▄▄       ██▓███   ██▓███      ██▒   █▓ ██▓ ███▄ ▄███▓
- ██▄█▒ ▓██ ▒ ██▒▒████▄    ▓██░  ██▒▓██░  ██▒   ▓██░   █▒▓██▒▓██▒▀█▀ ██▒
-▓███▄░ ▓██ ░▄█ ▒▒██  ▀█▄  ▓██░ ██▓▒▓██░ ██▓▒    ▓██  █▒░▒██▒▓██    ▓██░
-▓██ █▄ ▒██▀▀█▄  ░██▄▄▄▄██ ▒██▄█▓▒ ▒▒██▄█▓▒ ▒     ▒██ █░░░██░▒██    ▒██
-▒██▒ █▄░██▓ ▒██▒ ▓█   ▓██▒▒██▒ ░  ░▒██▒ ░  ░      ▒▀█░  ░██░▒██▒   ░██▒
-▒ ▒▒ ▓▒░ ▒▓ ░▒▓░ ▒▒   ▓▒█░▒▓▒░ ░  ░▒▓▒░ ░  ░      ░ ▐░  ░▓  ░ ▒░   ░  ░
-░ ░▒ ▒░  ░▒ ░ ▒░  ▒   ▒▒ ░░▒ ░     ░▒ ░           ░ ░░   ▒ ░░  ░      ░
-░ ░░ ░   ░░   ░   ░   ▒   ░░       ░░               ░░   ▒ ░░      ░
-░  ░      ░           ░  ░                           ░   ░         ░
-                                                    ░                  ]],
+               -- frame 0 del splash; milli después anima sobre estas mismas líneas
+               header = splash_header,
                keys = {
-                  { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.picker.smart()" },
-                  { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-                  { icon = " ", key = "g", desc = "Grep", action = ":lua Snacks.picker.grep()" },
+                  { icon = " ", key = "f", desc = "Find File",    action = ":lua Snacks.picker.smart()" },
+                  { icon = " ", key = "n", desc = "New File",     action = ":ene | startinsert" },
+                  { icon = " ", key = "g", desc = "Grep",         action = ":lua Snacks.picker.grep()" },
                   { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
-                  { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+                  { icon = " ", key = "q", desc = "Quit",         action = ":qa" },
                },
             },
             sections = {
                { section = "header" },
-               { section = "keys", gap = 1, padding = 1 },
+               {
+                  text = { { "── krapp.vim ──", hl = "SnacksDashboardTitle" } },
+                  align = "center",
+                  padding = 1,
+               },
+               { section = "keys",         gap = 1,    padding = 1 },
                { section = "recent_files", indent = 2, padding = 1 },
                {
                   text = {
@@ -100,18 +141,24 @@ return {
                os = {
                   editPreset = "nvim-remote",
                   edit = vim.v.progpath
-                     .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}})<CR>']=],
+                      .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}})<CR>']=],
                   editAtLine = vim.v.progpath
-                     .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}}, {{line}})<CR>']=],
+                      .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}}, {{line}})<CR>']=],
                   openDirInEditor = vim.v.progpath
-                     .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{dir}})<CR>']=],
+                      .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{dir}})<CR>']=],
                   -- this one isnt a remote command, make sure it gets our config regardless of if we name it nvim or not
                   editAtLineAndWait = nixInfo(vim.v.progpath, "progpath")
-                     .. " +{{line}} {{filename}}",
+                      .. " +{{line}} {{filename}}",
                },
             },
          },
       })
+
+      -- Arranca la animación del splash sobre el header del dashboard.
+      -- Tiene que correr DESPUÉS de Snacks.setup() para que el buffer del
+      -- dashboard exista y milli encuentre el anchor (frame 0 = splash_header).
+      require("milli").snacks({ splash = SPLASH, loop = true })
+
       -- Handle the backend of those remote commands.
       -- hopefully this can be removed one day
       nixInfo.lazygit_fix = function(path, line)
@@ -149,9 +196,11 @@ return {
          Snacks.explorer.open()
       end, { desc = "Snacks file explorer" })
 
-      vim.keymap.set("n", "<c-\\>", function()
-         Snacks.terminal.open()
-      end, { desc = "Snacks Terminal" })
+      -- toggle: misma terminal abre/cierra, preservando el buffer y el historial.
+      -- Funciona en modo normal y desde adentro de la propia terminal.
+      vim.keymap.set({ "n", "t" }, "<c-\\>", function()
+         Snacks.terminal.toggle()
+      end, { desc = "Toggle terminal" })
 
       vim.keymap.set("n", "<leader>gl", function()
          Snacks.lazygit.open()
@@ -237,5 +286,32 @@ return {
       vim.keymap.set("n", "<leader>su", function()
          Snacks.picker.undo()
       end, { desc = "History of undo's" })
+
+      -- Abre el archivo (o línea/selección) actual en el browser, en el remoto
+      -- correspondiente (GitHub, GitLab, Bitbucket).
+      vim.keymap.set({ "n", "v" }, "<leader>gB", function()
+         Snacks.gitbrowse()
+      end, { desc = "Git Browse (open in browser)" })
+
+      -- Rename file con awareness de LSP: actualiza imports en otros archivos.
+      vim.keymap.set("n", "<leader>cR", function()
+         Snacks.rename.rename_file()
+      end, { desc = "[R]ename file (LSP-aware)" })
+
+      -- Toggle Snacks.dim (focus on current scope, dim everything else)
+      local _dim_enabled = false
+      Snacks.toggle({
+         name = "Dim",
+         get = function() return _dim_enabled end,
+         set = function(state)
+            _dim_enabled = state
+            if state then
+               Snacks.dim()
+            else
+               Snacks.dim.disable()
+            end
+         end,
+      }):map("<leader>tD")
    end,
+   },
 }

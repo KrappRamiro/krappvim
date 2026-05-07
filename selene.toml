@@ -1,0 +1,7 @@
+std = "vim"
+
+[lints]
+mixed_table = "allow"
+# `function() foo() end` inline en keymaps de Neovim es idiomático,
+# no tiene sentido pelearlo
+multiple_statements = "allow"

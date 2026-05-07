@@ -8,13 +8,34 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
+-- Mismas keys pero desde TERMINAL mode (cuando estás dentro de :term o de
+-- la float de Snacks). El <C-\\><C-n> sale del terminal mode al modo normal
+-- antes de hacer el <C-w>h/j/k/l.
+vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
+vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Move to bottom window" })
+vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
+vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Move to right window" })
+
 -- Moving lines
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves Line Down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves Line Up" })
 
--- Better scrolling
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll Down" })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll Up" })
+-- Better scrolling: cursor centrado sin pelear con la animación de snacks.scroll.
+-- En vez de `<C-d>zz` (que tiene race condition con el smooth scroll), levantamos
+-- `scrolloff` a 999 antes del scroll así vim mantiene el cursor centrado de
+-- forma nativa — snacks anima sin conflicto. Después restauramos a 10.
+-- Ver https://github.com/folke/snacks.nvim/discussions/1030#discussioncomment-12109404
+vim.keymap.set("n", "<C-d>", function()
+   vim.wo.scrolloff = 999
+   vim.defer_fn(function() vim.wo.scrolloff = 10 end, 500)
+   return "<C-d>"
+end, { expr = true, desc = "Scroll Down" })
+
+vim.keymap.set("n", "<C-u>", function()
+   vim.wo.scrolloff = 999
+   vim.defer_fn(function() vim.wo.scrolloff = 10 end, 500)
+   return "<C-u>"
+end, { expr = true, desc = "Scroll Up" })
 
 --  Better search results
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next Search Result" })

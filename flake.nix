@@ -20,6 +20,19 @@
     flake = false;
   };
 
+  # milli.nvim — animated ASCII splash para el dashboard de snacks
+  inputs.plugins-milli = {
+    url = "github:Amansingh-afk/milli.nvim";
+    flake = false;
+  };
+
+  # tiny-code-action.nvim — picker bonito + diff preview para LSP code actions
+  inputs.plugins-tiny-code-action = {
+    url = "github:rachartier/tiny-code-action.nvim";
+    flake = false;
+  };
+
+
   outputs =
     {
       self,

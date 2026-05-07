@@ -1,3 +1,36 @@
+-- ────────────────────────────────────────────────────────────────────────
+-- Cómo agregar un LSP server nuevo a este archivo
+-- ────────────────────────────────────────────────────────────────────────
+--
+-- Cada server es un bloque con esta estructura:
+--
+--    {
+--       "<NOMBRE_DEL_SERVER>",         -- ej: "rust_analyzer"
+--       lsp = {
+--          filetypes = { "<FT1>", ... }, -- los filetypes que dispara este server
+--          settings = {
+--             <NOMBRE_INTERNO> = {      -- el namespace de settings de este LSP
+--                -- acá van las opciones del server
+--             },
+--          },
+--       },
+--    },
+--
+-- Dos cosas a tener en cuenta:
+--
+--   * "<NOMBRE_DEL_SERVER>" es el nombre que usa lspconfig.
+--     No se inventa, son nombres específicos. La lista de valores posibles está en:
+--     :help lspconfig-all
+--     o en
+--     https://github.com/neovim/nvim-lspconfig/tree/master/lsp
+--
+--   * settings: cada LSP tiene su propio namespace (Lua, nixd, python, rust-analyzer, etc).
+--     Las opciones del server van envueltas en una tabla con la clave que ese
+--     server espera.
+--
+-- Y obviamente, agregar el binario del server en module.nix
+-- (config.specs.general.extraPackages).
+-- ────────────────────────────────────────────────────────────────────────
 return {
    {
       "nvim-lspconfig",
@@ -11,6 +44,17 @@ return {
       end,
       -- set up our on_attach function once before the spec loads
       before = function(_)
+         -- Inlay hints: anotaciones inline (nombres de params, tipos inferidos)
+         -- que el LSP envía. Por default Neovim NO las muestra aunque el LSP
+         -- las mande, hay que activarlas explícitamente.
+         vim.lsp.inlay_hint.enable(true)
+
+         -- Toggle global de inlay hints. Vive bajo <leader>t* (toggles).
+         -- El group está declarado en which_key.lua.
+         vim.keymap.set("n", "<leader>th", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+         end, { desc = "Toggle inlay [H]ints" })
+
          vim.lsp.config("*", {
             on_attach = function(_, bufnr)
                -- we create a function that lets us more easily define mappings specific
@@ -23,7 +67,10 @@ return {
                end
 
                nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-               nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+               -- usa tiny-code-action.nvim (picker snacks + diff preview con delta)
+               -- en lugar del default vim.lsp.buf.code_action que tira un dropdown
+               -- chiquito sin preview
+               nmap("<leader>ca", function() require("tiny-code-action").code_action() end, "[C]ode [A]ction")
                nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
                nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
                nmap("grr", function()
@@ -48,7 +95,11 @@ return {
                -- Lesser used LSP functionality
                nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-               nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+               nmap(
+                  "<leader>wr",
+                  vim.lsp.buf.remove_workspace_folder,
+                  "[W]orkspace [R]emove Folder"
+               )
                nmap("<leader>wl", function()
                   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                end, "[W]orkspace [L]ist Folders")
@@ -71,7 +122,7 @@ return {
       end,
    },
    {
-      -- lazydev makes your lua lsp load only the relevant definitions for a file.
+      -- lazydev makes your Lua LSP load only the relevant definitions for a file.
       -- It also gives us a nice way to correlate globals we create with files.
       "lazydev.nvim",
       auto_enable = true,
@@ -92,14 +143,20 @@ return {
                   words = { "Snacks" },
                   path = nixInfo.get_nix_plugin_path("snacks.nvim") .. "/lua",
                },
+               {
+                  words = { "noice" },
+                  path = nixInfo.get_nix_plugin_path("noice.nvim") .. "/lua",
+               },
             },
          })
       end,
    },
+
+   --- LSP START GOING HERE
+
    {
       -- name of the lsp
       "lua_ls",
-      for_cat = "lua",
       lsp = {
          -- if you provide the filetypes it doesn't ask lspconfig for the filetypes
          -- (meaning it doesn't call the callback function we defined in the main init.lua)
@@ -118,7 +175,6 @@ return {
    {
       "nixd",
       enabled = nixInfo.isNix, -- mason doesn't have nixd
-      for_cat = "nix",
       lsp = {
          filetypes = { "nix" },
          settings = {
@@ -134,6 +190,131 @@ return {
                   suppress = {
                      "sema-escaping-with",
                   },
+               },
+            },
+         },
+      },
+   },
+   {
+      -- NOTE: bashls usa shellcheck por dentro para diagnostics, así que se solapa
+      -- con `sh = { "shellcheck" }` y `bash = { "shellcheck" }` en lint.lua.
+      -- Si querés evitar duplicados, sacalos de lint.lua.
+      "bashls",
+      lsp = {
+         filetypes = { "sh", "bash" },
+      },
+   },
+   {
+      -- NOTE: si ves diagnosticos duplicados, es porque tanto el LSP como el Linter estan dando diagnosticos y se estan solapando
+      "rust_analyzer",
+      lsp = {
+         filetypes = { "rust" },
+         settings = {
+            -- la clave lleva guión, por eso necesita la sintaxis ["..."]
+            ["rust-analyzer"] = {
+               check = {
+                  command = "clippy", -- usa clippy en lugar de cargo check
+               },
+               cargo = {
+                  allFeatures = true,
+               },
+            },
+         },
+      },
+   },
+   {
+      -- basedpyright es un fork comunitario de pyright con más features
+      -- (mejor inferencia, más diagnostics, configurables sin licencia comercial)
+      "basedpyright",
+      lsp = {
+         filetypes = { "python" },
+         settings = {
+            basedpyright = {
+               analysis = {
+                  typeCheckingMode = "strict", -- "off" | "basic" | "standard" | "strict" | "all"
+                  autoImportCompletions = true,
+                  diagnosticMode = "openFilesOnly",
+               },
+            },
+         },
+      },
+   },
+   {
+      -- maneja tanto Terraform como OpenTofu (.tf, .tfvars, .tofu)
+      "terraformls",
+      lsp = {
+         filetypes = { "terraform", "terraform-vars", "tf" },
+      },
+   },
+   {
+      -- un solo server cubre js, jsx, ts, tsx
+      "ts_ls",
+      lsp = {
+         filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+         settings = {
+            -- inlayHints es que te aparezca un texto gris dando info adicional, como cuando tenes esta funcion
+            --     function greet(name: string, age: number) { ... }
+            -- y la llamas asi
+            --     greet("Alice", 30)
+            -- Con inlay hints ves:
+            --     greet(name: "Alice", age: 30)
+            --            ↑              ↑
+            --            gris           gris
+            --            (no están realmente en el archivo)
+
+
+            typescript = {
+               inlayHints = {
+                  includeInlayParameterNameHints = "literals",
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayVariableTypeHints = false,
+               },
+            },
+            javascript = {
+               inlayHints = {
+                  includeInlayParameterNameHints = "literals",
+                  includeInlayFunctionParameterTypeHints = true,
+               },
+            },
+         },
+      },
+   },
+   {
+      "html",
+      lsp = {
+         filetypes = { "html" },
+         settings = {
+            html = {
+               format = {
+                  enable = false, -- preferimos prettier (en conform.lua)
+               },
+            },
+         },
+      },
+   },
+   {
+      "cssls",
+      lsp = {
+         filetypes = { "css", "scss", "less" },
+         settings = {
+            css = { validate = true },
+            scss = { validate = true },
+            less = { validate = true },
+         },
+      },
+   },
+   {
+      "gopls",
+      lsp = {
+         filetypes = { "go", "gomod", "gowork", "gotmpl" },
+         settings = {
+            gopls = {
+               gofumpt = true, -- usar gofumpt (más estricto que gofmt)
+               usePlaceholders = true, -- placeholder snippets en autocompletado
+               staticcheck = true, -- correr staticcheck via gopls
+               analyses = {
+                  unusedparams = true,
+                  shadow = true,
                },
             },
          },

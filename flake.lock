@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1777946660,
-        "narHash": "sha256-iw3XDIG6xxk+AZTcawCLHf6i9i4tXRzLZEoV9xhRToQ=",
+        "lastModified": 1778124196,
+        "narHash": "sha256-pYEytCNic/czazbV9r3tbQ6BZzqRBg/41x2dIC5ymOo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "bc57abace07689cfd34203aa5fb4027514895987",
+        "rev": "68a8af93ff4297686cb68880845e61e5e2e41d92",
         "type": "github"
       },
       "original": {
@@ -48,6 +48,38 @@
         "type": "github"
       }
     },
+    "plugins-milli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777436387,
+        "narHash": "sha256-i5uA7EToPUJkiZwFL/2sJ1XlA/OKV3ReZQau1j4di/A=",
+        "owner": "Amansingh-afk",
+        "repo": "milli.nvim",
+        "rev": "6a19fe9ab2a068b7ce384cea277c24672add161e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Amansingh-afk",
+        "repo": "milli.nvim",
+        "type": "github"
+      }
+    },
+    "plugins-tiny-code-action": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777075455,
+        "narHash": "sha256-UF9zeO5Uujdt2MEwy2d2Lhk6JRnEN4vrEvYslv0/zaA=",
+        "owner": "rachartier",
+        "repo": "tiny-code-action.nvim",
+        "rev": "0d040ed81f7953118b81cd12681fcdfcac069803",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rachartier",
+        "repo": "tiny-code-action.nvim",
+        "type": "github"
+      }
+    },
     "plugins-tiny-inline-diagnostic": {
       "flake": false,
       "locked": {
@@ -69,6 +101,8 @@
         "nixpkgs": "nixpkgs",
         "plugins-lze": "plugins-lze",
         "plugins-lzextras": "plugins-lzextras",
+        "plugins-milli": "plugins-milli",
+        "plugins-tiny-code-action": "plugins-tiny-code-action",
         "plugins-tiny-inline-diagnostic": "plugins-tiny-inline-diagnostic",
         "wrappers": "wrappers"
       }

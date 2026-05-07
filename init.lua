@@ -149,7 +149,7 @@ vim.wo.relativenumber = true
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 150
 
 -- Set completeopt to have a better completion experience
 -- Safeguard in case blink fails to load
@@ -211,4 +211,13 @@ nixInfo.lze.load({
    { import = "lze_specs.noice" },
    { import = "lze_specs.grug_far" },
    { import = "lze_specs.tiny_inline_diagnostic" },
+   { import = "lze_specs.tiny_code_action" },
+   { import = "lze_specs.dropbar" },
+   { import = "lze_specs.flash" },
+   { import = "lze_specs.hop" },
+   { import = "lze_specs.ccc" },
+   { import = "lze_specs.colorizer" },
+   { import = "lze_specs.multicursor" },
+   { import = "lze_specs.hardtime" },
+   { import = "lze_specs.lensline" },
 })

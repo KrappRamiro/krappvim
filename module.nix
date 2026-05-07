@@ -95,27 +95,6 @@ inputs:
     }
   ];
 
-  # you can name these whatever you want.
-  config.specs.nix = {
-    data = null;
-    extraPackages = with pkgs; [
-      nixd
-      nixfmt
-    ];
-  };
-  # You can use the before and after fields to run them before or after other specs or spec of lists of specs
-  config.specs.lua = {
-    after = [ "general" ];
-    lazy = true;
-    data = with pkgs.vimPlugins; [
-      lazydev-nvim
-    ];
-    extraPackages = with pkgs; [
-      lua-language-server
-      stylua
-    ];
-  };
-
   config.specs.general = {
     # this would ensure any config included from nix in here will be ran after any provided by the `lze` spec
     # If we provided any from within either spec, anyway
@@ -130,12 +109,41 @@ inputs:
       ghostscript # provides gs, used to render pdf files
       tectonic # renders LaTeX math expressions
       mermaid-cli # provides mmdc
+      delta # pretty diff renderer, usado por tiny-code-action para previews
+
+      # formatters
       ruff
       prettier
       shfmt
       typstyle
       rustfmt
+      nixfmt
+      stylua
       opentofu
+
+      # linters
+      selene # lua linter
+      clippy
+      tflint
+      golangci-lint
+      eslint_d
+      stylelint
+      htmlhint
+      statix
+      deadnix
+      shellcheck
+
+      # LSP servers (binarios)
+      lua-language-server
+      nixd
+      bash-language-server
+      rust-analyzer
+      basedpyright
+      terraform-ls
+      typescript-language-server
+      typescript
+      vscode-langservers-extracted # bundle: html, cssls, jsonls, eslint
+      gopls
     ];
     # this `lazy = true` definition will transfer to specs in the contained DAL, if there is one.
     # This is because the definition of lazy in `config.specMods` checks `parentSpec.lazy or false`
@@ -153,6 +161,7 @@ inputs:
       mini-nvim # Collection of plugins, https://nvim-mini.org/mini.nvim/
       snacks-nvim
       nvim-lspconfig
+      lazydev-nvim
       nvim-surround
       vim-startuptime
       blink-cmp
@@ -167,8 +176,24 @@ inputs:
       grug-far-nvim
       noice-nvim
       nui-nvim
-      # Este me lo traje de flake.nix
+      dropbar-nvim
+      flash-nvim
+      hop-nvim
+      ccc-nvim
+      # Estos los traemos via flake.nix (no están en nixpkgs)
       config.nvim-lib.neovimPlugins.tiny-inline-diagnostic
+      config.nvim-lib.neovimPlugins.milli
+      config.nvim-lib.neovimPlugins.tiny-code-action
+      # colorizer: highlightea color codes inline (#FF0000 con fondo rojo, etc)
+      # apunta al fork de catgoose (el activo, norcalli's está abandonado)
+      nvim-colorizer-lua
+      # multicursor estilo VSCode (Ctrl+D add-next-match)
+      multicursor-nvim
+      # hardtime: te corrige malos hábitos de motion (hjkl spam, etc)
+      hardtime-nvim
+      # lensline: muestra info contextual arriba de cada función
+      # (ref count via LSP, last git author, etc.)
+      lensline-nvim
       # treesitter + grammars
       nvim-treesitter.withAllGrammars
       # This is for if you only want some of the grammars

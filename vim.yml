@@ -1,0 +1,15 @@
+---
+base: lua51
+name: vim
+lua_versions:
+  - luajit
+
+globals:
+  vim:
+    any: true
+  Snacks:
+    any: true
+  nixInfo:
+    any: true
+  jit:
+    any: true

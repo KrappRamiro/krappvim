@@ -23,6 +23,21 @@ return {
                   ["vim.lsp.util.stylize_markdown"] = true,
                },
             },
+            -- Workaround para el bug https://github.com/folke/noice.nvim/issues/1097:
+            -- en nvim 0.11+, noice se "come" el stdout/stderr de comandos `:!cmd`
+            -- y no aparecen en :messages ni en :Noice. Este route los enruta a
+            -- un split visible y scrolleable.
+            routes = {
+               {
+                  filter = { event = "msg_show", kind = { "shell_out", "shell_err" } },
+                  view = "split",
+                  opts = {
+                     level = "info",
+                     skip = false,
+                     replace = false,
+                  },
+               },
+            },
             presets = {
                -- donde poner la UI:
                --   false lo pone en el centro de la pantalla

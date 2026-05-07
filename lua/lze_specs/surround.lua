@@ -2,7 +2,7 @@ return {
    "nvim-surround",
    auto_enable = true,
    event = "DeferredUIEnter",
-   after = function(plugin)
+   after = function()
       require("nvim-surround").setup()
    end,
 }

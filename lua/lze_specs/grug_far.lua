@@ -9,9 +9,13 @@ return {
          mode = { "n", "v" },
       },
    },
-   after = function(plugin)
+   after = function()
+      local grugInstanceName = "krappvim-grug-global-instance" -- just to avoid repeating
       require("grug-far").setup({
-         windowCreationCommand = "enew", -- enew significa "dame un buffer nuevo en la ventana actual"
+         -- no-op: el keymap se encarga de abrir la window (flotante) antes
+         -- grug_far solamente pone su buffer ahí, asi que no hace falta crear ninguna ventana,
+         -- por eso usamos echo '', para que sea un no-op
+         windowCreationCommand = "echo ''",
       })
 
       local function open_float()
@@ -20,58 +24,78 @@ return {
             height = 0.85,
             border = "rounded",
             backdrop = 60,
-            enter = true,   -- hace que esta ventana sea la activa
+            enter = true, -- esta ventana queda como la activa
             fixbuf = false, -- permite que grug-far reemplace el buffer
          })
       end
 
-      local function cleanup_orphans()
-         vim.schedule(function()
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-               if vim.api.nvim_buf_get_name(buf) == ""
-                  and vim.bo[buf].buftype == ""
-                  and not vim.bo[buf].modified
-                  and #vim.fn.win_findbuf(buf) == 0
-               then
-                  vim.api.nvim_buf_delete(buf, { force = true })
-               end
-            end
-         end)
+      -- FILL AUTOMATICO DE Files Filter EN GRUG
+      -- Esto se encarga de automaticamente rellenar Files Filter con la extension de tu archivo actual
+      -- Es un atajo: el 90% de las veces que abrís un buscador estando en un .lua, querés buscar en .lua. Te ahorra tipear ese filtro cada vez.
+      -- ┌────────────────── grug-far ───────────────┐
+      -- │ Search:        [_____________]            │
+      -- │ Replace:       [_____________]            │
+      -- │ Files Filter:  [_____________]  ← este    │
+      -- │ Flags:         [_____________]            │
+      -- ├───────────────────────────────────────────┤
+      -- │  (acá aparecen los resultados)            │
+      -- └───────────────────────────────────────────┘
+      --
+      local function getFilesFilter()
+         -- fileExtension va a terminar teniendo la extensión del archivo, los posibles valores pueden ser:
+         --    archivo con extensión                                -->     "js" o "py" o "lua" etc...
+         --    archivo normal pero sin extensión, tipo Makefile     -->     "" (string vacío)
+         --    otro tipo de buffer (terminal, help, etc...)         -->     false
+         local fileExtension
+         if vim.bo.buftype == "" then -- vim.bo.buftype vale "" cuando estas dentro de un archivo normal. Si por ejemplo estuvieras dentro de una terminal, valdria "terminal"
+            fileExtension = vim.fn.expand("%:e") -- guardo la extensión
+         else
+            fileExtension = false -- no es archivo normal, no me sirve
+         end
+
+         if not fileExtension then
+            return nil -- caso 1: otro tipo de buffer (terminal, help, quickfix, etc)
+         elseif fileExtension == "" then
+            return nil -- caso 2: archivo sin extensión
+         else
+            return "*." .. fileExtension -- caso 3: archivo con extensión
+         end
       end
 
       vim.keymap.set({ "n", "v" }, "<leader>sr", function()
          local grug = require("grug-far")
-         local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
 
-         if grug.has_instance("main") then
-            local inst = grug.get_instance("main")
+         if grug.has_instance(grugInstanceName) then
+            local inst = grug.get_instance(grugInstanceName)
             if not inst then
-               vim.notify("grug-far: instance 'main' not found", vim.log.levels.ERROR)
+               vim.notify(
+                  "grug-far: has_instance('"
+                     .. grugInstanceName
+                     .. "') devolvió true pero get_instance() devolvió nil. "
+                     .. "Esto no debería pasar salvo que cambie la API interna de grug-far.",
+                  vim.log.levels.ERROR
+               )
                return
             end
             if inst:is_open() then
-               -- already visible: hide it (buffer is preserved)
                inst:hide()
-               return
             else
-               -- hidden: re-open in a new float
                open_float()
                inst:open()
-               cleanup_orphans()
-               return
             end
+            return
          end
 
-         -- first time: create float and open grug-far
+         -- ojo: getFilesFilter() lee el buffer actual, así que tenemos que llamarlo
+         -- ANTES de open_float(), sino terminás midiendo el buffer scratch de la float
+         local filter = getFilesFilter()
          open_float()
          grug.open({
-            instanceName = "main",
-            windowCreationCommand = "enew",
+            instanceName = grugInstanceName,
             prefills = {
-               filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+               filesFilter = filter,
             },
          })
-         cleanup_orphans()
       end, { desc = "Search and Replace (toggle)" })
    end,
 }
