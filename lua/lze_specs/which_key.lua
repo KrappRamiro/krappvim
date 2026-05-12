@@ -63,6 +63,29 @@ return {
          { "<leader>tC", desc = "Toggle [C]olor highlighter" },
          { "<leader>tD", desc = "Toggle [D]im (focus current scope)" },
 
+         { "<leader>M", group = "[M]arkdown (markview)", icon = "󰽛" },
+         { "<leader>M_", hidden = true },
+         -- Toggle render
+         { "<leader>Mt", desc = "[t]oggle render (current buffer)" },
+         { "<leader>MT", desc = "[T]oggle render (all buffers)" },
+         -- Hybrid mode
+         { "<leader>Mh", desc = "Toggle [h]ybrid mode (current)" },
+         { "<leader>MH", desc = "Toggle [H]ybrid mode (all)" },
+         -- Re-render forzado
+         { "<leader>Mr", desc = "[r]e-render (current buffer)" },
+         { "<leader>MR", desc = "[R]e-render (all buffers)" },
+         -- Clear overlays
+         { "<leader>Mc", desc = "[c]lear overlays (current)" },
+         { "<leader>MC", desc = "[C]lear overlays (all)" },
+         -- Linewise hybrid toggle
+         { "<leader>Ml", desc = "Toggle [l]inewise hybrid mode" },
+         -- Splitview
+         { "<leader>Ms", desc = "Toggle [s]plitview preview" },
+         -- Open link
+         { "<leader>Mo", desc = "[o]pen link under cursor" },
+         -- Debug
+         { "<leader>Md", desc = "Show [d]ebug trace" },
+
          { "<leader>C", group = "[C]olor", icon = "󰸌" },
          { "<leader>C_", hidden = true },
          { "<leader>Cp", desc = "[C]olor [P]ick (ccc)" },

@@ -180,6 +180,9 @@ inputs:
       flash-nvim
       hop-nvim
       ccc-nvim
+      # markview: render bonito de markdown DENTRO del buffer (treesitter,
+      # sin server externo). Toggle via <leader>tm.
+      markview-nvim
       # Estos los traemos via flake.nix (no están en nixpkgs)
       config.nvim-lib.neovimPlugins.tiny-inline-diagnostic
       config.nvim-lib.neovimPlugins.milli
@@ -249,7 +252,31 @@ inputs:
     type = lib.types.attrsOf lib.types.bool;
     default = builtins.mapAttrs (_: v: v.enable) config.specs;
   };
-  # build plugins from inputs set
+  # builds plugins from inputs set
+  # > given a prefix string and a set, find every key in the set that
+  # > starts with that prefix, and turn them into Neovim plugins.
+  # for example, if you had an attribute set like this
+  #
+  #     inputs = {
+  #       nixpkgs                       = <the fetched nixpkgs>;
+  #       nix-wrapper-modules           = <the fetched wrapper>;
+  #       plugins-tiny-inline-diagnostic = <the fetched plugin repo>;
+  #       plugins-milli                 = <the fetched plugin repo>;
+  #       plugins-tiny-code-action      = <the fetched plugin repo>;
+  #       ...etc
+  #     }
+  # 
+  # if you went and did
+  #     myvar = config.nvim-lib.pluginsFromPrefix "plugins-" inputs;
+  # you would have a resulting mybar like this
+  #
+  #     {
+  #       milli                  = <built plugin>;
+  #       tiny-code-action       = <built plugin>;
+  #       tiny-inline-diagnostic = <built plugin>;
+  #     }
+  #
+  #
   options.nvim-lib.pluginsFromPrefix = lib.mkOption {
     type = lib.types.raw;
     readOnly = true;
