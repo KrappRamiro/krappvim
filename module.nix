@@ -187,8 +187,13 @@ inputs:
       config.nvim-lib.neovimPlugins.tiny-inline-diagnostic
       config.nvim-lib.neovimPlugins.milli
       config.nvim-lib.neovimPlugins.tiny-code-action
+      config.nvim-lib.neovimPlugins.mind
       # colorizer: highlightea color codes inline (#FF0000 con fondo rojo, etc)
       # apunta al fork de catgoose (el activo, norcalli's está abandonado)
+      {
+        data = plenary-nvim;
+        lazy = false;
+      }
       nvim-colorizer-lua
       # multicursor estilo VSCode (Ctrl+D add-next-match)
       multicursor-nvim

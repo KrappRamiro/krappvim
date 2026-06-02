@@ -1,89 +1,133 @@
-# Neovim module
+# krapp.vim
 
-This is a demonstration of the [neovim module](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/neovim.html)
+Personal Neovim configuration built with [nix-wrapper-modules](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/neovim.html).
+Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 
-It makes use of the tips in the [tips and tricks](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/neovim.html#tips-and-tricks) section of the documentation.
+---
 
-This template configuration is by no means a perfect, complete configuration.
+## Plugins
 
-However, it is plenty to start on, and covers some interesting ways to use the module (and how to lazily load plugins and config).
+### Core
 
-This configuration is 1 `lua` file, however the whole set of directories from a normal `neovim` configuration directory are available.
+| Plugin | Function |
+|--------|----------|
+| [lze](https://github.com/BirdeeHub/lze) | Lazy-loading library |
+| [lzextras](https://github.com/BirdeeHub/lzextras) | Extra handlers for lze (LSP handler, `on_require`, etc.) |
+| [vim-sleuth](https://github.com/tpope/vim-sleuth) | Auto-detects `tabstop`/`shiftwidth` per file |
+| [mini.nvim](https://github.com/echasnovski/mini.nvim) | Collection of 40+ small focused plugins  |
 
-To see what directories you can put stuff in, see: [:help 'rtp'](https://neovim.io/doc/user/options.html#'rtp')
+### UI
 
-The main reason it is in 1 file is that it is following the style of [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim).
+| Plugin | Function |
+|--------|----------|
+| [gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim) | Colorscheme |
+| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Statusline |
+| [noice.nvim](https://github.com/folke/noice.nvim) | Replaces the default UI for messages, cmdline, and popupmenu with floats |
+| [nui.nvim](https://github.com/MunifTanjim/nui.nvim) | UI component library (dependency of noice and others) |
+| [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim) | VS Code-style breadcrumb bar at the top of the window |
+| [fidget.nvim](https://github.com/j-hui/fidget.nvim) | LSP progress notifications in the bottom-right corner |
+| [which-key.nvim](https://github.com/folke/which-key.nvim) | Popup showing available keybindings as you type a prefix |
+| [tiny-inline-diagnostic](https://github.com/rachartier/tiny-inline-diagnostic.nvim) | Pretty inline diagnostics rendered next to the offending line |
+| [milli.nvim](https://github.com/Amansingh-afk/milli.nvim) | Animated ASCII splash screen for the snacks dashboard |
 
-The other reason it is in 1 file, is that it makes it a cleaner experience to init this template into an existing configuration.
+### Navigation & Search
 
-This template config uses [lze](https://github.com/BirdeeHub/lze) for lazy loading of the configuration.
+| Plugin | Function |
+|--------|----------|
+| [snacks.nvim](https://github.com/folke/snacks.nvim) | Kitchen sink: fuzzy picker, file explorer, dashboard, terminal, lazygit, image viewer, scroll animation, git browse, LSP rename, and more |
+| [flash.nvim](https://github.com/folke/flash.nvim) | Jump anywhere on screen with 1 or 2 key labels |
+| [hop.nvim](https://github.com/smoka7/hop.nvim) | EasyMotion-style navigation |
+| [grug-far.nvim](https://github.com/MagicDuck/grug-far.nvim) | Project-wide find & replace with live preview |
 
-You may also be interested in [lz.n](https://github.com/lumen-oss/lz.n) for this purpose.
+### Editing
 
-Both achieve the same general result and main interface,
-but have different underlying implementations and thus have different handler features.
+| Plugin | Function |
+|--------|----------|
+| [nvim-surround](https://github.com/kylechui/nvim-surround) | Add, change, and delete surrounding pairs (`()`, `""`, tags, etc.) |
+| [multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) | Multiple cursors — `Ctrl+D` to add next match, like VS Code |
+| [ccc.nvim](https://github.com/uga-rosa/ccc.nvim) | Color picker and convertor (hex, rgb, hsl, etc.) |
+| [nvim-colorizer.lua](https://github.com/catgoose/nvim-colorizer.lua) | Highlights color codes inline (`#FF0000` shows with a red background) |
+| [hardtime.nvim](https://github.com/m4xshen/hardtime.nvim) | Corrects bad motion habits (hjkl spam, repeated arrows) |
 
-Both are fantastic for lazy loading with both nix and the builtin plugin manager.
+### LSP & Completions
 
-You may also decide you don't need lazy loading at all. This is fine, many plugins mostly handle that themselves.
+| Plugin | Function |
+|--------|----------|
+| [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | Easy configuration for Neovim's built-in LSP client |
+| [lazydev.nvim](https://github.com/folke/lazydev.nvim) | Improves Lua LSP for Neovim config files (loads correct type definitions) |
+| [blink.cmp](https://github.com/saghen/blink.cmp) | Fast completion engine |
+| [colorful-menu.nvim](https://github.com/xzbdmw/colorful-menu.nvim) | Adds syntax-colored labels to completion menu items |
+| [tiny-code-action](https://github.com/rachartier/tiny-code-action.nvim) | LSP code actions with a Snacks picker and delta diff preview |
 
-To initialize this template flake into the current directory, run:
+### Formatting & Linting
 
-```bash
-nix flake init -t github:BirdeeHub/nix-wrapper-modules#neovim
-```
+| Plugin | Function |
+|--------|----------|
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Formatter runner (prettier, stylua, ruff, nixfmt, rustfmt, etc.) |
+| [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Linter runner (selene, eslint_d, shellcheck, statix, etc.) |
 
-It will not replace existing files.
+### Treesitter
 
-If you are using `zsh` you may need to escape the `#`
+| Plugin | Function |
+|--------|----------|
+| [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax tree parsing — enables accurate highlighting, folding, and text objects |
+| [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter-based text objects (`af` = around function, `ac` = around class, etc.) |
 
-To build it from that directory
+### Git
+
+| Plugin | Function |
+|--------|----------|
+| [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git change indicators in the gutter, hunk navigation, blame, and staging |
+
+### Markdown
+
+| Plugin | Function |
+|--------|----------|
+| [markview.nvim](https://github.com/OXY2DEV/markview.nvim) | In-buffer markdown rendering (headings, tables, code blocks, checkboxes) with hybrid mode — raw under cursor, rendered everywhere else |
+
+### Notes
+
+| Plugin | Function |
+|--------|----------|
+| [mind.nvim](https://github.com/Selyss/mind.nvim) | Hierarchical tree-based note organizer — `<leader>nm` for main tree, `<leader>np` for project tree |
+
+### Context & Annotations
+
+| Plugin | Function |
+|--------|----------|
+| [lensline.nvim](https://github.com/lensline.nvim) | Displays contextual info above functions: LSP reference count, last git author |
+
+### Debugging & Profiling
+
+| Plugin | Function |
+|--------|----------|
+| [vim-startuptime](https://github.com/dstein64/vim-startuptime) | Benchmarks startup time, breaking it down per plugin |
+
+---
+
+## LSP Servers
+
+Managed via `nvim-lspconfig`, binaries provided by Nix.
+
+| Server | Languages |
+|--------|-----------|
+| `lua_ls` | Lua |
+| `nixd` | Nix |
+| `bashls` | Shell / Bash |
+| `rust_analyzer` | Rust (with clippy) |
+| `basedpyright` | Python |
+| `terraformls` | Terraform / OpenTofu |
+| `ts_ls` | JavaScript / TypeScript |
+| `html` | HTML |
+| `cssls` | CSS / SCSS / Less |
+| `gopls` | Go |
+
+---
+
+## Building
 
 ```bash
 nix build .
 ```
 
-It exports a package! (and other things)
-
-If you don't want your config in a separate flake, just call the `module.nix` file like:
-
-```nix
-inputs: # <-- get the library somehow
-{ pkgs, ... }: {
-  # call the module and install the package (nixos example)
-  environment.systemPackages = [ (inputs.nix-wrapper-modules.lib.evalPackage [ ./module.nix { inherit pkgs; } ]) ];
-}
-```
-
-There are a lot of other ways to install it as well, see [the getting started documentation](https://birdeehub.github.io/nix-wrapper-modules/md/getting-started.html)
-
-You may also wish to view the `flake.nix` of this template, as it demonstrates some of those things when setting up its outputs.
-
----
-
-The nix in this template is not as simple as it could possibly be, as it demonstrates some things
-from the [tips and tricks](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/neovim.html#tips-and-tricks) section of the documentation.
-
-If you wanted as simple as possible, you could use something more like the following as your `module.nix`
-
-```nix
-{ wlib, config, pkgs, lib, ... }:
-  imports = [ wlib.wrapperModules.neovim ];
-  specs.general = with pkgs.vimPlugins; [
-    # plugins which are loaded at startup ...
-  ];
-  specs.lazy = {
-    lazy = true;
-    data = with pkgs.vimPlugins; [
-      # plugins which are not loaded until you vim.cmd.packadd them ...
-    ];
-  };
-  extraPackages = with pkgs; [
-    # lsps, formatters, etc...
-  ];
-  settings.config_directory = ./.; # or lib.generators.mkLuaInline "vim.fn.stdpath('config')";
-}
-```
-
-At the same time, you may find that the `module.nix` file from this template is not massively more complex than that either,
-and contains some useful tricks and information.
+Run as `kvim`.

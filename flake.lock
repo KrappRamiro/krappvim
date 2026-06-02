@@ -64,6 +64,22 @@
         "type": "github"
       }
     },
+    "plugins-mind": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1700524216,
+        "narHash": "sha256-b4atXqR3nO0y3J8RLz4oGCoIssKUfWdZh3rdCfxRi9Y=",
+        "owner": "Selyss",
+        "repo": "mind.nvim",
+        "rev": "3ab126f62f93d204beb7212df7bca9038456b261",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Selyss",
+        "repo": "mind.nvim",
+        "type": "github"
+      }
+    },
     "plugins-tiny-code-action": {
       "flake": false,
       "locked": {
@@ -102,6 +118,7 @@
         "plugins-lze": "plugins-lze",
         "plugins-lzextras": "plugins-lzextras",
         "plugins-milli": "plugins-milli",
+        "plugins-mind": "plugins-mind",
         "plugins-tiny-code-action": "plugins-tiny-code-action",
         "plugins-tiny-inline-diagnostic": "plugins-tiny-inline-diagnostic",
         "wrappers": "wrappers"
