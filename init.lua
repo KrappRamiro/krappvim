@@ -221,4 +221,5 @@ nixInfo.lze.load({
    { import = "lze_specs.hardtime" },
    { import = "lze_specs.lensline" },
    { import = "lze_specs.markview" },
+   { import = "lze_specs.mind" },
 })

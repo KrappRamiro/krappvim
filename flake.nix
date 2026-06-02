@@ -32,6 +32,12 @@
     flake = false;
   };
 
+  # mind.nvim — organizador de notas en árbol jerárquico
+  inputs.plugins-mind = {
+    url = "github:Selyss/mind.nvim";
+    flake = false;
+  };
+
 
   outputs =
     {
