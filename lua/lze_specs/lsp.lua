@@ -244,6 +244,9 @@ return {
       "terraformls",
       lsp = {
          filetypes = { "terraform", "terraform-vars", "tf" },
+         init_options = {
+            terraform = { path = "tofu" },
+         },
       },
    },
    {
