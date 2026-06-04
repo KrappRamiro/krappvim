@@ -245,7 +245,7 @@ return {
       lsp = {
          filetypes = { "terraform", "terraform-vars", "tf" },
          init_options = {
-            terraform = { path = "tofu" },
+            terraform = { path = vim.fn.exepath("tofu") },
          },
       },
    },
