@@ -55,8 +55,9 @@ return {
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
          end, { desc = "Toggle inlay [H]ints" })
 
-         vim.lsp.config("*", {
-            on_attach = function(_, bufnr)
+         vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(ev)
+               local bufnr = ev.buf
                -- we create a function that lets us more easily define mappings specific
                -- for LSP related items. It sets the mode, buffer and description for us each time.
                local nmap = function(keys, func, desc)
