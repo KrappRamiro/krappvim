@@ -324,4 +324,24 @@ return {
          },
       },
    },
+   {
+      "yamlls",
+      lsp = {
+         filetypes = { "yaml" },
+         settings = {
+            yaml = {
+               -- descarga el catálogo de SchemaStore.org y matchea el schema
+               -- según el nombre del archivo (docker-compose.yml, etc.)
+               schemaStore = {
+                  enable = true,
+                  url = "https://www.schemastore.org/api/json/catalog.json",
+               },
+               validate = true,
+            },
+            redhat = {
+               telemetry = { enabled = false },
+            },
+         },
+      },
+   },
 }
