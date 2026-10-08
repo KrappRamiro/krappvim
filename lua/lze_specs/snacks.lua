@@ -78,19 +78,33 @@ return {
                      -- each open spawns a fresh picker with no memory of the last
                      -- one). We stash the toggled value in `vim.g` and feed it
                      -- back in from the `-` keymap below.
+                     --
+                     -- NOTE: these can't be named `toggle_hidden`/`toggle_ignored` -
+                     -- snacks regenerates actions with those exact names from its
+                     -- own `toggles` table *after* merging our config, which would
+                     -- silently stomp these. Different names + rebound keys (below)
+                     -- dodge that.
                      actions = {
-                        toggle_hidden = function(picker)
+                        persist_toggle_hidden = function(picker)
                            picker.opts.hidden = not picker.opts.hidden
                            vim.g.snacks_explorer_hidden = picker.opts.hidden
                            picker.list:set_target()
                            picker:find()
                         end,
-                        toggle_ignored = function(picker)
+                        persist_toggle_ignored = function(picker)
                            picker.opts.ignored = not picker.opts.ignored
                            vim.g.snacks_explorer_ignored = picker.opts.ignored
                            picker.list:set_target()
                            picker:find()
                         end,
+                     },
+                     win = {
+                        list = {
+                           keys = {
+                              ["H"] = "persist_toggle_hidden",
+                              ["I"] = "persist_toggle_ignored",
+                           },
+                        },
                      },
                   },
                   files = {
