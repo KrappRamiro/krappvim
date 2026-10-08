@@ -73,6 +73,25 @@ return {
                      auto_close = true,
                      hidden = true,
                      ignored = true,
+                     -- Persist H/I toggles across close/reopen for the lifetime of
+                     -- the Neovim session (snacks forgets them by default since
+                     -- each open spawns a fresh picker with no memory of the last
+                     -- one). We stash the toggled value in `vim.g` and feed it
+                     -- back in from the `-` keymap below.
+                     actions = {
+                        toggle_hidden = function(picker)
+                           picker.opts.hidden = not picker.opts.hidden
+                           vim.g.snacks_explorer_hidden = picker.opts.hidden
+                           picker.list:set_target()
+                           picker:find()
+                        end,
+                        toggle_ignored = function(picker)
+                           picker.opts.ignored = not picker.opts.ignored
+                           vim.g.snacks_explorer_ignored = picker.opts.ignored
+                           picker.list:set_target()
+                           picker:find()
+                        end,
+                     },
                   },
                   files = {
                      hidden = true,
@@ -209,7 +228,10 @@ return {
 
          -- snacks general stuff
          vim.keymap.set("n", "-", function()
-            Snacks.explorer.open()
+            Snacks.explorer.open({
+               hidden = vim.g.snacks_explorer_hidden,
+               ignored = vim.g.snacks_explorer_ignored,
+            })
          end, { desc = "Snacks file explorer" })
 
          -- toggle: misma terminal abre/cierra, preservando el buffer y el historial.
