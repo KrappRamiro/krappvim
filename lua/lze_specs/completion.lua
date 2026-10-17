@@ -128,6 +128,22 @@ return {
                   lsp = {
                      score_offset = 40,
                   },
+                  snippets = {
+                     opts = {
+                        -- friendly-snippets registra los snippets de relm4 (un
+                        -- framework de GUI con GTK) para TODO archivo rust, así que
+                        -- aparecían relm-component y compañía en cualquier proyecto.
+                        -- Verificado contra Neovim 0.12: es el único framework de
+                        -- friendly-snippets mapeado a un filetype de uso general.
+                        -- vue, twig y htmldjango solo se activan en archivos de ese
+                        -- framework (.vue, .twig, .html con tags {% %}); "django" no
+                        -- lo detecta ningún archivo (models.py es python); el resto
+                        -- (rails, flutter, angular...) ni siquiera son filetypes.
+                        filter_snippets = function(_, file)
+                           return not file:match("/frameworks/relm4/")
+                        end,
+                     },
+                  },
                },
             },
          })
