@@ -51,11 +51,11 @@
     "plugins-milli": {
       "flake": false,
       "locked": {
-        "lastModified": 1783314567,
-        "narHash": "sha256-8eDQL90GVT0eoGrpOuul3PuehRtiB66N1FdggOczjEE=",
+        "lastModified": 1790410311,
+        "narHash": "sha256-LCszPAAToz80Dudta7JmG53Hg71PYZDTDCTOqQdpLkw=",
         "owner": "Amansingh-afk",
         "repo": "milli.nvim",
-        "rev": "6e94122fcc783bcee7d30b05cedc53beddb01104",
+        "rev": "b69890078dfde44cf71d192bbb02027f81aff1b1",
         "type": "github"
       },
       "original": {
