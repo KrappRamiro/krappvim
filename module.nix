@@ -291,7 +291,7 @@ inputs:
   #       plugins-tiny-code-action      = <the fetched plugin repo>;
   #       ...etc
   #     }
-  # 
+  #
   # if you went and did
   #     myvar = config.nvim-lib.pluginsFromPrefix "plugins-" inputs;
   # you would have a resulting mybar like this
