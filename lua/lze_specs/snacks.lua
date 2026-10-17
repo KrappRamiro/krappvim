@@ -364,6 +364,29 @@ return {
                end
             end,
          }):map("<leader>tD")
+
+         -- Toggles del formateo al guardar (conform.lua lee estas variables).
+         -- Viven acá y no en conform.lua porque conform carga recién en el
+         -- primer guardado, y el toggle tiene que existir desde el arranque.
+         -- Útil en repos ajenos donde no querés reformatear archivos enteros.
+         Snacks.toggle({
+            name = "Format on save (global)",
+            get = function()
+               return not vim.g.disable_autoformat
+            end,
+            set = function(state)
+               vim.g.disable_autoformat = not state
+            end,
+         }):map("<leader>tf")
+         Snacks.toggle({
+            name = "Format on save (buffer)",
+            get = function()
+               return not vim.b.disable_autoformat
+            end,
+            set = function(state)
+               vim.b.disable_autoformat = not state
+            end,
+         }):map("<leader>tF")
       end,
    },
 }

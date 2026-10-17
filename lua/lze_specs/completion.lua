@@ -105,13 +105,22 @@ return {
             -- La lista de fuyentes que usa blink para generar sugerencias
             sources = {
                default = {
+                  "lazydev", -- módulos de plugins al escribir require("...") en Lua
                   "lsp", -- sugerencias del LSP
                   "path", -- rutas de archivo (./src , /home/ , etc...)
+                  "snippets", -- snippets de friendly-snippets (ver module.nix)
                   "buffer", -- palabras que ya estan escritas en el buffer actual
                   "omni", -- fuente generica de palabras de neovim
                },
 
                providers = {
+                  -- Config sacada del README de lazydev.nvim. El módulo solo
+                  -- devuelve items en buffers Lua, en el resto no hace nada.
+                  lazydev = {
+                     name = "LazyDev",
+                     module = "lazydev.integrations.blink",
+                     score_offset = 100, -- arriba de todo, como recomienda lazydev
+                  },
                   -- el score_offset le agrega mas peso a una opcion que a otra
                   path = {
                      score_offset = 50,

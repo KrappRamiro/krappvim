@@ -18,8 +18,11 @@ return {
          nix = { "statix", "deadnix" },
          sh = { "shellcheck" },
          bash = { "shellcheck" },
-         rust = { "clippy" },
-         python = { "ruff" },
+         -- rust: sin linter acá. rust-analyzer ya corre clippy (check.command
+         -- en lsp.lua); el linter "clippy" de nvim-lint compilaba el proyecto
+         -- entero otra vez en cada guardado y duplicaba los diagnostics.
+         -- python: ruff corre como LSP (lsp.lua), da los mismos diagnostics
+         -- mientras escribís y además code actions.
          terraform = { "tflint" }, -- cubre .tf y .tofu
          javascript = { "eslint_d" },
          typescript = { "eslint_d" },
@@ -30,10 +33,18 @@ return {
          css = { "stylelint" },
       }
 
-      vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+      -- BufReadPost: lintea apenas abrís el archivo, no recién al guardar.
+      -- No usamos InsertLeave/TextChanged porque algunos linters (deadnix,
+      -- tflint, golangcilint) leen el archivo del disco y darían resultados
+      -- viejos. Ver la sección "Usage" del README de nvim-lint.
+      vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+         group = vim.api.nvim_create_augroup("krappvim_lint", { clear = true }),
          callback = function()
             require("lint").try_lint()
          end,
       })
+      -- este plugin carga en FileType, o sea DESPUÉS del BufReadPost del
+      -- primer archivo, así que ese lo linteamos a mano
+      require("lint").try_lint()
    end,
 }
