@@ -7,9 +7,13 @@ return {
       -- Cuando hacés / o ? y navegás por resultados, muestra "3/15".
       -- Solo aparece si hay highlight de búsqueda activo (después de un /).
       local function search_count()
-         if vim.v.hlsearch == 0 then return "" end
+         if vim.v.hlsearch == 0 then
+            return ""
+         end
          local ok, result = pcall(vim.fn.searchcount, { maxcount = 999, timeout = 500 })
-         if not ok or next(result) == nil then return "" end
+         if not ok or next(result) == nil then
+            return ""
+         end
          local denom = math.min(result.total, result.maxcount)
          return string.format("Search: %d/%d", result.current, denom)
       end

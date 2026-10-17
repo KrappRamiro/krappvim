@@ -27,13 +27,17 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves Line Up" })
 -- Ver https://github.com/folke/snacks.nvim/discussions/1030#discussioncomment-12109404
 vim.keymap.set("n", "<C-d>", function()
    vim.wo.scrolloff = 999
-   vim.defer_fn(function() vim.wo.scrolloff = 10 end, 500)
+   vim.defer_fn(function()
+      vim.wo.scrolloff = 10
+   end, 500)
    return "<C-d>"
 end, { expr = true, desc = "Scroll Down" })
 
 vim.keymap.set("n", "<C-u>", function()
    vim.wo.scrolloff = 999
-   vim.defer_fn(function() vim.wo.scrolloff = 10 end, 500)
+   vim.defer_fn(function()
+      vim.wo.scrolloff = 10
+   end, 500)
    return "<C-u>"
 end, { expr = true, desc = "Scroll Up" })
 

@@ -1,11 +1,17 @@
 return {
    "mind",
    auto_enable = true,
-   cmd = { "MindOpenMain", "MindOpenSmartProject", "MindOpenProject", "MindClose", "MindReloadState" },
+   cmd = {
+      "MindOpenMain",
+      "MindOpenSmartProject",
+      "MindOpenProject",
+      "MindClose",
+      "MindReloadState",
+   },
    keys = {
-      { "<leader>nm", "<cmd>MindOpenMain<cr>",         desc = "Open [m]ain mind tree" },
+      { "<leader>nm", "<cmd>MindOpenMain<cr>", desc = "Open [m]ain mind tree" },
       { "<leader>np", "<cmd>MindOpenSmartProject<cr>", desc = "Open [p]roject mind tree" },
-      { "<leader>nc", "<cmd>MindClose<cr>",            desc = "[c]lose mind tree" },
+      { "<leader>nc", "<cmd>MindClose<cr>", desc = "[c]lose mind tree" },
    },
    after = function()
       require("mind").setup({
@@ -77,30 +83,30 @@ return {
 
             require("which-key").add({
                -- normal navigation
-               { "<cr>",    desc = "Open data file",         buffer = ev.buf },
-               { "<s-cr>",  desc = "Open data file (index)", buffer = ev.buf },
-               { "<tab>",   desc = "Toggle node",            buffer = ev.buf },
-               { "<s-tab>", desc = "Toggle parent",          buffer = ev.buf },
-               { "/",       desc = "Select by path",         buffer = ev.buf },
+               { "<cr>", desc = "Open data file", buffer = ev.buf },
+               { "<s-cr>", desc = "Open data file (index)", buffer = ev.buf },
+               { "<tab>", desc = "Toggle node", buffer = ev.buf },
+               { "<s-tab>", desc = "Toggle parent", buffer = ev.buf },
+               { "/", desc = "Select by path", buffer = ev.buf },
                -- adding nodes
-               { "o",       desc = "Add node below",         buffer = ev.buf },
-               { "O",       desc = "Add node above",         buffer = ev.buf },
-               { "i",       desc = "Add node inside (end)",  buffer = ev.buf },
-               { "I",       desc = "Add node inside (start)",buffer = ev.buf },
-               { "c",       desc = "Add inside end (index)", buffer = ev.buf },
+               { "o", desc = "Add node below", buffer = ev.buf },
+               { "O", desc = "Add node above", buffer = ev.buf },
+               { "i", desc = "Add node inside (end)", buffer = ev.buf },
+               { "I", desc = "Add node inside (start)", buffer = ev.buf },
+               { "c", desc = "Add inside end (index)", buffer = ev.buf },
                -- editing
-               { "r",       desc = "Rename node",            buffer = ev.buf },
-               { "d",       desc = "Delete node",            buffer = ev.buf },
-               { "D",       desc = "Delete data file",       buffer = ev.buf },
-               { "u",       desc = "Make URL node",          buffer = ev.buf },
+               { "r", desc = "Rename node", buffer = ev.buf },
+               { "d", desc = "Delete node", buffer = ev.buf },
+               { "D", desc = "Delete data file", buffer = ev.buf },
+               { "u", desc = "Make URL node", buffer = ev.buf },
                -- icons
-               { "$",       desc = "Change icon (menu)",     buffer = ev.buf },
-               { "R",       desc = "Change icon (direct)",   buffer = ev.buf },
+               { "$", desc = "Change icon (menu)", buffer = ev.buf },
+               { "R", desc = "Change icon (direct)", buffer = ev.buf },
                -- links & selection
-               { "l",       desc = "Copy node link",         buffer = ev.buf },
-               { "L",       desc = "Copy node link (index)", buffer = ev.buf },
-               { "x",       desc = "Select node",            buffer = ev.buf },
-               { "q",       desc = "Quit",                   buffer = ev.buf },
+               { "l", desc = "Copy node link", buffer = ev.buf },
+               { "L", desc = "Copy node link (index)", buffer = ev.buf },
+               { "x", desc = "Select node", buffer = ev.buf },
+               { "q", desc = "Quit", buffer = ev.buf },
             })
          end,
       })

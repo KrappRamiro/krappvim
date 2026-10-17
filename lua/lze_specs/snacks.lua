@@ -48,8 +48,8 @@ return {
             scroll = {
                animate = {
                   duration = { step = 20, total = 150 },
-                  easing = "linear"
-               }
+                  easing = "linear",
+               },
             },
             -- Abrir el archivo / línea / commit / repo actual en el browser (GitHub).
             -- Keymap: `<leader>gB` (n + v).
@@ -138,11 +138,11 @@ return {
                },
             },
             statuscolumn = {
-               left = { "mark", "git" },   -- priority of signs on the left (high to low)
+               left = { "mark", "git" }, -- priority of signs on the left (high to low)
                right = { "sign", "fold" }, -- priority of signs on the right (high to low)
                folds = {
-                  open = false,            -- show open fold icons
-                  git_hl = false,          -- use Git Signs hl for fold icons
+                  open = false, -- show open fold icons
+                  git_hl = false, -- use Git Signs hl for fold icons
                },
                git = {
                   -- patterns to match Git signs
@@ -158,11 +158,31 @@ return {
                   -- frame 0 del splash; milli después anima sobre estas mismas líneas
                   header = splash_header,
                   keys = {
-                     { icon = " ", key = "f", desc = "Find File",    action = ":lua Snacks.picker.smart()" },
-                     { icon = " ", key = "n", desc = "New File",     action = ":ene | startinsert" },
-                     { icon = " ", key = "g", desc = "Grep",         action = ":lua Snacks.picker.grep()" },
-                     { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
-                     { icon = " ", key = "q", desc = "Quit",         action = ":qa" },
+                     {
+                        icon = " ",
+                        key = "f",
+                        desc = "Find File",
+                        action = ":lua Snacks.picker.smart()",
+                     },
+                     {
+                        icon = " ",
+                        key = "n",
+                        desc = "New File",
+                        action = ":ene | startinsert",
+                     },
+                     {
+                        icon = " ",
+                        key = "g",
+                        desc = "Grep",
+                        action = ":lua Snacks.picker.grep()",
+                     },
+                     {
+                        icon = " ",
+                        key = "r",
+                        desc = "Recent Files",
+                        action = ":lua Snacks.picker.recent()",
+                     },
+                     { icon = " ", key = "q", desc = "Quit", action = ":qa" },
                   },
                },
                sections = {
@@ -172,7 +192,7 @@ return {
                      align = "center",
                      padding = 1,
                   },
-                  { section = "keys",         gap = 1,    padding = 1 },
+                  { section = "keys", gap = 1, padding = 1 },
                   { section = "recent_files", indent = 2, padding = 1 },
                   {
                      text = {
@@ -190,14 +210,14 @@ return {
                   os = {
                      editPreset = "nvim-remote",
                      edit = vim.v.progpath
-                         .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}})<CR>']=],
+                        .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}})<CR>']=],
                      editAtLine = vim.v.progpath
-                         .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}}, {{line}})<CR>']=],
+                        .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{filename}}, {{line}})<CR>']=],
                      openDirInEditor = vim.v.progpath
-                         .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{dir}})<CR>']=],
+                        .. [=[ --server "$NVIM" --remote-send '<cmd>lua nixInfo.lazygit_fix({{dir}})<CR>']=],
                      -- this one isnt a remote command, make sure it gets our config regardless of if we name it nvim or not
                      editAtLineAndWait = nixInfo(vim.v.progpath, "progpath")
-                         .. " +{{line}} {{filename}}",
+                        .. " +{{line}} {{filename}}",
                   },
                },
             },
@@ -354,7 +374,9 @@ return {
          local _dim_enabled = false
          Snacks.toggle({
             name = "Dim",
-            get = function() return _dim_enabled end,
+            get = function()
+               return _dim_enabled
+            end,
             set = function(state)
                _dim_enabled = state
                if state then

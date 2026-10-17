@@ -35,7 +35,7 @@ return {
                      name = "usages",
                      enabled = true,
                      include = { "refs" },
-                     breakdown = true, --  "5 refs, 2 defs, 1 impls" en lugar de "8 usages" 
+                     breakdown = true, --  "5 refs, 2 defs, 1 impls" en lugar de "8 usages"
                      show_zero = true,
                   },
                   -- Último autor git que tocó esta función
@@ -63,6 +63,11 @@ return {
       -- Toggle visual (más comun y barato): esconde lenses pero deja los
       -- providers corriendo en background. Ideal cuando solo querés un
       -- buffer "limpio" momentáneo.
-      vim.keymap.set("n", "<leader>tl", "<cmd>LenslineToggleView<cr>", { desc = "Toggle [l]ensline view" })
+      vim.keymap.set(
+         "n",
+         "<leader>tl",
+         "<cmd>LenslineToggleView<cr>",
+         { desc = "Toggle [l]ensline view" }
+      )
    end,
 }

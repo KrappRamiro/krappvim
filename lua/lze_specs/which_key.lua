@@ -96,7 +96,6 @@ return {
          { "<leader>ms", desc = "[s]kip next match" },
          { "<leader>mS", desc = "Skip prev match" },
          { "<leader>mA", desc = "[A]dd cursors to all matches" },
-
       })
    end,
 }

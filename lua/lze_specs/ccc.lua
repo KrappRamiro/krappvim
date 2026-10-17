@@ -59,7 +59,9 @@ return {
          close_cheatsheet() -- defensive: si quedó alguna abierta de antes, la cerramos
 
          local ccc_win = vim.fn.bufwinid(ccc_buf)
-         if ccc_win == -1 then return end
+         if ccc_win == -1 then
+            return
+         end
 
          -- nvim_win_get_position devuelve [row, col] absolutos en pantalla
          -- (a diferencia de cfg.row/col, que pueden ser relativos a cursor/win)
@@ -77,8 +79,7 @@ return {
          local needed_height = #CHEATSHEET_LINES + 2
          local row_below = pos[1] + height + CHEATSHEET_GAP
          local fits_below = row_below + needed_height <= vim.o.lines
-         local row = fits_below
-               and row_below
+         local row = fits_below and row_below
             or math.max(0, pos[1] - CHEATSHEET_GAP - needed_height)
 
          cheatsheet_win = vim.api.nvim_open_win(buf, false, {
@@ -112,11 +113,15 @@ return {
          -- Latencia: hasta 200ms - imperceptible. Más confiable que stackear
          -- WinClosed/WinLeave/BufHidden, que dependen de cómo ccc cierra.
          poll_timer = vim.uv.new_timer()
-         poll_timer:start(200, 200, vim.schedule_wrap(function()
-            if not vim.api.nvim_win_is_valid(ccc_win) then
-               close_cheatsheet()
-            end
-         end))
+         poll_timer:start(
+            200,
+            200,
+            vim.schedule_wrap(function()
+               if not vim.api.nvim_win_is_valid(ccc_win) then
+                  close_cheatsheet()
+               end
+            end)
+         )
       end
 
       vim.api.nvim_create_autocmd("FileType", {
@@ -124,7 +129,9 @@ return {
          pattern = "ccc-ui",
          callback = function(args)
             -- vim.schedule: damos un tick para que ccc termine de posicionar su float
-            vim.schedule(function() open_cheatsheet(args.buf) end)
+            vim.schedule(function()
+               open_cheatsheet(args.buf)
+            end)
          end,
       })
    end,

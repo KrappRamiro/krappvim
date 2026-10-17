@@ -24,6 +24,11 @@ return {
          },
       })
 
-      vim.keymap.set("n", "<leader>tC", "<cmd>ColorizerToggle<cr>", { desc = "Toggle [C]olor highlighter" })
+      vim.keymap.set(
+         "n",
+         "<leader>tC",
+         "<cmd>ColorizerToggle<cr>",
+         { desc = "Toggle [C]olor highlighter" }
+      )
    end,
 }

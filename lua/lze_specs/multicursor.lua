@@ -40,19 +40,33 @@ return {
       end
 
       -- Acción principal estilo VSCode: agregar cursor en próxima coincidencia
-      map("<C-n>", function() mc.matchAddCursor(1) end, "Multicursor: add next match")
-      map("<leader>mN", function() mc.matchAddCursor(-1) end, "Multicursor: add prev match")
+      map("<C-n>", function()
+         mc.matchAddCursor(1)
+      end, "Multicursor: add next match")
+      map("<leader>mN", function()
+         mc.matchAddCursor(-1)
+      end, "Multicursor: add prev match")
 
       -- Saltearse una coincidencia sin agregarla
-      map("<leader>ms", function() mc.matchSkipCursor(1) end, "Multicursor: skip next match")
-      map("<leader>mS", function() mc.matchSkipCursor(-1) end, "Multicursor: skip prev match")
+      map("<leader>ms", function()
+         mc.matchSkipCursor(1)
+      end, "Multicursor: skip next match")
+      map("<leader>mS", function()
+         mc.matchSkipCursor(-1)
+      end, "Multicursor: skip prev match")
 
       -- Cmd+Shift+L de VSCode: cursor en TODAS las coincidencias del símbolo
-      map("<leader>mA", function() mc.matchAllAddCursors() end, "Multicursor: add cursors to all matches")
+      map("<leader>mA", function()
+         mc.matchAllAddCursors()
+      end, "Multicursor: add cursors to all matches")
 
       -- Agregar cursor en la línea de arriba/abajo (column-style multi-edit)
-      map("<C-Up>", function() mc.lineAddCursor(-1) end, "Multicursor: add cursor above")
-      map("<C-Down>", function() mc.lineAddCursor(1) end, "Multicursor: add cursor below")
+      map("<C-Up>", function()
+         mc.lineAddCursor(-1)
+      end, "Multicursor: add cursor above")
+      map("<C-Down>", function()
+         mc.lineAddCursor(1)
+      end, "Multicursor: add cursor below")
 
       -- Salir del modo multicursor
       map("<Esc>", function()
@@ -62,7 +76,11 @@ return {
             mc.clearCursors()
          else
             -- pasaje normal del Esc al resto de Vim
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+            vim.api.nvim_feedkeys(
+               vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+               "n",
+               false
+            )
          end
       end, "Multicursor: clear / fallback Esc", { "n" })
 

@@ -38,7 +38,6 @@
     flake = false;
   };
 
-
   outputs =
     {
       self,
