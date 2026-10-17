@@ -104,12 +104,14 @@ inputs:
       lazygit
       tree-sitter
       fd # Finder used by snacks
+      ripgrep # rg: lo usan el grep de snacks y la búsqueda de todo-comments
       glib # Provides gio, tool used to move deleted files to the trash instead of permanently deleting them
       imagemagick # provides magick and convert, snacks  uses them to display images inside neovim
       ghostscript # provides gs, used to render pdf files
       tectonic # renders LaTeX math expressions
       mermaid-cli # provides mmdc
       delta # pretty diff renderer, usado por tiny-code-action para previews
+      curl # crates.nvim lo usa para consultar crates.io
 
       # formatters
       ruff
@@ -120,6 +122,7 @@ inputs:
       nixfmt
       stylua
       opentofu
+      taplo # formatter de TOML (tambien es el LSP, ver abajo)
 
       # linters
       selene # lua linter
@@ -145,6 +148,10 @@ inputs:
       vscode-langservers-extracted # bundle: html, cssls, jsonls, eslint
       gopls
       yaml-language-server
+      # taplo ya está arriba en formatters, el mismo binario hace de LSP
+      dockerfile-language-server # Dockerfile
+      tinymist # Typst
+      marksman # Markdown (links entre archivos, headings, referencias)
     ];
     # this `lazy = true` definition will transfer to specs in the contained DAL, if there is one.
     # This is because the definition of lazy in `config.specMods` checks `parentSpec.lazy or false`
@@ -167,6 +174,19 @@ inputs:
       vim-startuptime
       blink-cmp
       colorful-menu-nvim
+      # snippets listos para usar (rust, python, go, etc). Tiene que estar en el
+      # runtimepath ANTES de que cargue blink, por eso lazy = false: blink los
+      # busca con nvim_get_runtime_file() al cargar.
+      {
+        data = friendly-snippets;
+        lazy = false;
+      }
+      # completado y acciones de crates en Cargo.toml (versiones, features)
+      crates-nvim
+      # catálogo de schemas de SchemaStore.org para jsonls y yamlls
+      SchemaStore-nvim
+      # resalta TODO/NOTE/FIX/HACK en comentarios y los lista en el picker
+      todo-comments-nvim
       lualine-nvim
       gitsigns-nvim
       which-key-nvim

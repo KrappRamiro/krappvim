@@ -17,6 +17,17 @@ return {
 
          require("noice").setup({
             lsp = {
+               -- El progreso del LSP ("indexing...", etc) ya lo muestra fidget.nvim
+               -- abajo a la derecha. Con esto en true se veía dos veces.
+               progress = {
+                  enabled = false,
+               },
+               -- La firma de funciones mientras escribís ya la muestra blink.cmp
+               -- (signature.enabled en completion.lua). Si quedan los dos
+               -- prendidos aparecen dos popups superpuestos.
+               signature = {
+                  enabled = false,
+               },
                -- use treesitter to render markdown in LSP hover and signature popups
                override = {
                   ["vim.lsp.util.convert_input_to_markdown_lines"] = true,

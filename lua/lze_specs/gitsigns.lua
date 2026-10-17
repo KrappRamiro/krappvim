@@ -27,7 +27,7 @@ return {
                   return "]c"
                end
                vim.schedule(function()
-                  gs.next_hunk()
+                  gs.nav_hunk("next") -- next_hunk() está deprecado
                end)
                return "<Ignore>"
             end, { expr = true, desc = "Jump to next hunk" })
@@ -37,7 +37,7 @@ return {
                   return "[c"
                end
                vim.schedule(function()
-                  gs.prev_hunk()
+                  gs.nav_hunk("prev") -- prev_hunk() está deprecado
                end)
                return "<Ignore>"
             end, { expr = true, desc = "Jump to previous hunk" })
@@ -51,10 +51,10 @@ return {
                gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
             end, { desc = "reset git hunk" })
             -- normal mode
-            map("n", "<leader>gs", gs.stage_hunk, { desc = "git stage hunk" })
+            map("n", "<leader>gs", gs.stage_hunk, { desc = "git stage/unstage hunk" })
             map("n", "<leader>gr", gs.reset_hunk, { desc = "git reset hunk" })
             map("n", "<leader>gS", gs.stage_buffer, { desc = "git Stage buffer" })
-            map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "undo stage hunk" })
+            -- undo_stage_hunk está deprecado: <leader>gs sobre un hunk ya stageado lo des-stagea
             map("n", "<leader>gR", gs.reset_buffer, { desc = "git Reset buffer" })
             map("n", "<leader>gp", gs.preview_hunk, { desc = "preview git hunk" })
             map("n", "<leader>gb", function()
@@ -72,7 +72,13 @@ return {
                gs.toggle_current_line_blame,
                { desc = "toggle git blame line" }
             )
-            map("n", "<leader>gtd", gs.toggle_deleted, { desc = "toggle git show deleted" })
+            -- toggle_deleted está deprecado, preview_hunk_inline muestra lo borrado inline
+            map(
+               "n",
+               "<leader>gtd",
+               gs.preview_hunk_inline,
+               { desc = "preview hunk inline (show deleted)" }
+            )
 
             -- Text object
             map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "select git hunk" })

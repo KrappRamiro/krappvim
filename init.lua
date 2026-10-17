@@ -170,14 +170,37 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
+-- See `:help vim.hl.on_yank()` (vim.highlight fue renombrado a vim.hl en 0.11)
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
    callback = function()
-      vim.highlight.on_yank()
+      vim.hl.on_yank()
    end,
    group = highlight_group,
    pattern = "*",
+})
+
+-- [[ Diagnostics ]]
+-- See `:help vim.diagnostic.config()`
+-- virtual_text lo maneja tiny-inline-diagnostic (lo apaga en su spec)
+vim.diagnostic.config({
+   -- con varios diagnostics en la misma línea, el sign y el orden muestran
+   -- primero el más grave (error > warning > info > hint)
+   severity_sort = true,
+   signs = {
+      -- iconos nerd font en vez de las letras E/W/I/H
+      text = {
+         [vim.diagnostic.severity.ERROR] = "󰅚 ",
+         [vim.diagnostic.severity.WARN] = "󰀪 ",
+         [vim.diagnostic.severity.INFO] = "󰋽 ",
+         [vim.diagnostic.severity.HINT] = "󰌶 ",
+      },
+   },
+   -- el float de <leader>e: con borde y diciendo de qué herramienta viene
+   float = {
+      border = "rounded",
+      source = "if_many",
+   },
 })
 
 -- netrw is neovim file browser.
@@ -194,11 +217,12 @@ require("keymaps")
 -- You can also include other files from within the specs via an `import` spec.
 -- see https://github.com/BirdeeHub/lze?tab=readme-ov-file#structuring-your-plugins
 nixInfo.lze.load({
-   { import = "lze_specs.mini_icons" },
+   { import = "lze_specs.mini" },
    { import = "lze_specs.colorschemes" },
    { import = "lze_specs.lsp" },
    { import = "lze_specs.treesitter" },
    { import = "lze_specs.completion" },
+   { import = "lze_specs.crates" },
    { import = "lze_specs.snacks" },
    { import = "lze_specs.conform" },
    { import = "lze_specs.lint" },
@@ -222,4 +246,5 @@ nixInfo.lze.load({
    { import = "lze_specs.lensline" },
    { import = "lze_specs.markview" },
    { import = "lze_specs.mind" },
+   { import = "lze_specs.todo_comments" },
 })

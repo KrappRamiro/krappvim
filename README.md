@@ -48,6 +48,8 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | [ccc.nvim](https://github.com/uga-rosa/ccc.nvim) | Color picker and convertor (hex, rgb, hsl, etc.) |
 | [nvim-colorizer.lua](https://github.com/catgoose/nvim-colorizer.lua) | Highlights color codes inline (`#FF0000` shows with a red background) |
 | [hardtime.nvim](https://github.com/m4xshen/hardtime.nvim) | Corrects bad motion habits (hjkl spam, repeated arrows) |
+| [mini.pairs](https://github.com/nvim-mini/mini.nvim/blob/main/readmes/mini-pairs.md) | Autocloses brackets and quotes (`'` stays literal in Rust for lifetimes) |
+| [todo-comments.nvim](https://github.com/folke/todo-comments.nvim) | Highlights `TODO:`, `NOTE:`, `FIX:`, `HACK:` comments; `]t`/`[t` to jump, `<leader>st` to list them |
 
 ### LSP & Completions
 
@@ -58,12 +60,15 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | [blink.cmp](https://github.com/saghen/blink.cmp) | Fast completion engine |
 | [colorful-menu.nvim](https://github.com/xzbdmw/colorful-menu.nvim) | Adds syntax-colored labels to completion menu items |
 | [tiny-code-action](https://github.com/rachartier/tiny-code-action.nvim) | LSP code actions with a Snacks picker and delta diff preview |
+| [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | Ready-made snippets for many languages, served by blink.cmp's `snippets` source |
+| [crates.nvim](https://github.com/saecki/crates.nvim) | `Cargo.toml` helper: crate name, version, and feature completion, outdated-version hints, and code actions (in-process LSP) |
+| [SchemaStore.nvim](https://github.com/b0o/SchemaStore.nvim) | Schema catalog for `jsonls`, `yamlls`, and `taplo` (`package.json`, GitHub workflows, `Cargo.toml`, etc.) |
 
 ### Formatting & Linting
 
 | Plugin | Function |
 |--------|----------|
-| [conform.nvim](https://github.com/stevearc/conform.nvim) | Formatter runner (prettier, stylua, ruff, nixfmt, rustfmt, etc.) |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Formatter runner (prettier, stylua, ruff, nixfmt, rustfmt, etc.). Formats on save; toggle with `<leader>tf` (global) or `<leader>tF` (buffer) |
 | [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Linter runner (selene, eslint_d, shellcheck, statix, etc.) |
 
 ### Treesitter
@@ -121,6 +126,13 @@ Managed via `nvim-lspconfig`, binaries provided by Nix.
 | `html` | HTML |
 | `cssls` | CSS / SCSS / Less |
 | `gopls` | Go |
+| `yamlls` | YAML (schemas from SchemaStore.nvim) |
+| `jsonls` | JSON / JSONC (schemas from SchemaStore.nvim) |
+| `taplo` | TOML (schemas from SchemaStore.nvim, see the catalog workaround in `lsp.lua`) |
+| `dockerls` | Dockerfile |
+| `tinymist` | Typst |
+| `marksman` | Markdown |
+| `ruff` | Python lint diagnostics and code actions (hover disabled in favor of `basedpyright`) |
 
 ---
 
