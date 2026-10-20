@@ -96,6 +96,29 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 |--------|----------|
 | [mind.nvim](https://github.com/Selyss/mind.nvim) | Hierarchical tree-based note organizer — `<leader>nm` for main tree, `<leader>np` for project tree |
 
+### AI
+
+| Plugin | Function |
+|--------|----------|
+| [sidekick.nvim](https://github.com/folke/sidekick.nvim) | Runs AI CLIs (`claude`, `claude-work`, `kiro-cli`) in a split next to the code, sends editor context to them (cursor position, selection, file, diagnostics), and reloads buffers the AI edits. Copilot Next Edit Suggestions are off |
+
+Keymaps live under `<leader>a`:
+
+| Key | Action |
+|-----|--------|
+| `<C-.>` | Jump between the code and the AI CLI (any mode, opens the CLI if needed) |
+| `<leader>aa` | Toggle the AI CLI window |
+| `<leader>as` | Pick which installed CLI to start or attach to |
+| `<leader>ac` / `<leader>aw` / `<leader>ak` | Toggle Claude (personal) / Claude (work) / Kiro CLI |
+| `<leader>at` | Send "this": cursor position, or the selection in visual mode |
+| `<leader>af` | Send the current file |
+| `<leader>av` | Send the visual selection |
+| `<leader>ap` | Pick a prompt (explain, fix, tests, review, refactor, security, commit...) |
+| `<leader>ad` | Detach the current CLI session |
+| `<A-a>` (in any Snacks picker) | Send the selected files or grep matches to the AI CLI |
+
+Inside the CLI window: `<C-p>` inserts a prompt or context, `<C-f>`/`<C-b>` pick files/buffers to reference, `<C-q>` leaves terminal mode, `q` (normal mode) hides it. The lualine shows an icon while a session is open.
+
 ### Context & Annotations
 
 | Plugin | Function |

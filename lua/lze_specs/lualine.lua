@@ -27,6 +27,17 @@ return {
          return reg ~= "" and ("recording @" .. reg) or ""
       end
 
+      -- ── helper: sesiones de sidekick ────────────────────────────────────
+      -- Muestra un ícono (y la cantidad, si hay más de una) cuando hay CLIs
+      -- de IA abiertas. Chequea package.loaded primero para no forzar la
+      -- carga de sidekick en cada refresh de la statusline.
+      local function sidekick_sessions()
+         if not package.loaded["sidekick"] then
+            return 0
+         end
+         return #require("sidekick.status").cli()
+      end
+
       require("lualine").setup({
          options = {
             icons_enabled = true,
@@ -42,6 +53,16 @@ return {
             lualine_x = {
                { macro_recording }, -- "recording @q" cuando grabás macro
                { search_count }, -- "3/15" cuando navegás búsquedas
+               {
+                  function()
+                     local n = sidekick_sessions()
+                     return " " .. (n > 1 and n or "")
+                  end,
+                  cond = function()
+                     return sidekick_sessions() > 0
+                  end,
+                  color = "Special",
+               },
                "encoding", -- utf-8, latin1, etc.
                "fileformat", -- unix, dos, mac
                "filetype", -- lua, typescript, etc.

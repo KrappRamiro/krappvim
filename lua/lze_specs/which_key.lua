@@ -41,6 +41,9 @@ return {
          { "<leader><leader>", group = "buffer commands", icon = "󰓩" },
          { "<leader><leader>_", hidden = true },
 
+         { "<leader>a", group = "[a]i (sidekick)", icon = "󰚩" },
+         { "<leader>a_", hidden = true },
+
          { "<leader>c", group = "[c]ode", icon = "󰘦" },
          { "<leader>c_", hidden = true },
          { "<leader>cR", desc = "[R]ename file (LSP-aware)" },
