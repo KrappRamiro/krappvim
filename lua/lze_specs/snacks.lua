@@ -67,6 +67,21 @@ return {
             },
             -- Picker is a fuzzy finder
             picker = {
+               -- <a-a> en cualquier picker manda lo seleccionado (archivos,
+               -- resultados de grep con su línea, etc.) a la CLI de IA de
+               -- sidekick. El require carga sidekick recién ahí (on_require).
+               actions = {
+                  sidekick_send = function(...)
+                     return require("sidekick.cli.picker.snacks").send(...)
+                  end,
+               },
+               win = {
+                  input = {
+                     keys = {
+                        ["<a-a>"] = { "sidekick_send", mode = { "n", "i" } },
+                     },
+                  },
+               },
                sources = {
                   -- The file explorer uses picker behind scenes
                   explorer = {

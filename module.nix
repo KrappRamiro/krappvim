@@ -112,6 +112,10 @@ inputs:
       mermaid-cli # provides mmdc
       delta # pretty diff renderer, usado por tiny-code-action para previews
       curl # crates.nvim lo usa para consultar crates.io
+      # sidekick.nvim: ps y lsof detectan las sesiones de CLIs de IA que ya
+      # están corriendo (claude, kiro-cli) para poder reengancharse a ellas
+      procps
+      lsof
 
       # formatters
       ruff
@@ -223,6 +227,11 @@ inputs:
       # lensline: muestra info contextual arriba de cada función
       # (ref count via LSP, last git author, etc.)
       lensline-nvim
+      # sidekick: terminal integrada para CLIs de IA (claude, kiro-cli, etc.)
+      # nixpkgs le agrega copilot-language-server (unfree) como runtimeDep,
+      # que solo sirve para las Next Edit Suggestions de Copilot. Las tenemos
+      # apagadas (ver lze_specs/sidekick.lua), así que lo sacamos.
+      (sidekick-nvim.overrideAttrs { runtimeDeps = [ ]; })
       # treesitter + grammars
       nvim-treesitter.withAllGrammars
       # This is for if you only want some of the grammars
