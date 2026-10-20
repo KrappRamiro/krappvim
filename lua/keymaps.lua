@@ -51,6 +51,19 @@ vim.keymap.set("n", "<leader><leader>]", "<cmd>bnext<CR>", { desc = "Next buffer
 vim.keymap.set("n", "<leader><leader>l", "<cmd>b#<CR>", { desc = "Last buffer" })
 vim.keymap.set("n", "<leader><leader>d", "<cmd>bdelete<CR>", { desc = "delete buffer" })
 
+-- Comentar/descomentar con Ctrl+/ (como en VS Code). Por dentro usa el `gc`
+-- nativo de Neovim, por eso remap = true (gc y gcc son mappings, no comandos).
+-- Se mapea también <C-_> porque varias terminales mandan ese código para
+-- Ctrl+/ cuando no usan el protocolo de teclado de kitty.
+for _, lhs in ipairs({ "<C-/>", "<C-_>" }) do
+   -- normal: la línea actual (con count, `3<C-/>` comenta 3 líneas)
+   vim.keymap.set("n", lhs, "gcc", { remap = true, desc = "Toggle comment line" })
+   -- visual: las líneas seleccionadas, y `gv` vuelve a seleccionarlas
+   vim.keymap.set("x", lhs, "gcgv", { remap = true, desc = "Toggle comment selection" })
+   -- insert: la línea actual sin salir de insert mode
+   vim.keymap.set("i", lhs, "<C-o>gcc", { remap = true, desc = "Toggle comment line" })
+end
+
 -- Remap for dealing with word wrap
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
