@@ -238,6 +238,10 @@ return {
       "nixd",
       enabled = nixInfo.isNix, -- mason doesn't have nixd
       lsp = {
+         -- Sin LD_LIBRARY_PATH: shells de devenv (ej. proyectos ESP32 Xtensa) la
+         -- exportan con una libstdc++ vieja, que le gana al RUNPATH de nixd y lo
+         -- crashea con "GLIBCXX_3.4.35 not found".
+         cmd = { "env", "-u", "LD_LIBRARY_PATH", "nixd" },
          filetypes = { "nix" },
          settings = {
             nixd = {
