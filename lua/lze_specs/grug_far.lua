@@ -16,6 +16,13 @@ return {
          -- grug_far solamente pone su buffer ahí, asi que no hace falta crear ninguna ventana,
          -- por eso usamos echo '', para que sea un no-op
          windowCreationCommand = "echo ''",
+         engines = {
+            ripgrep = {
+               defaults = {
+                  flags = "--fixed-strings",
+               },
+            },
+         },
       })
 
       local function open_float()
