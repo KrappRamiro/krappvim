@@ -127,6 +127,35 @@ return {
                   },
                   lsp = {
                      score_offset = 40,
+                     -- rust-analyzer marca sus mejores sugerencias (Ok/Err en un match,
+                     -- metodos faltantes en un impl) con el sortText mas bajo. Blink
+                     -- ordena primero por score (que incluye proximity y frecency), asi
+                     -- que esas sugerencias quedaban abajo. Les damos +100 para que
+                     -- ganen, y proximity/frecency quedan justo despues.
+                     transform_items = function(_, items)
+                        local best
+                        for _, item in ipairs(items) do
+                           if item.sortText and (best == nil or item.sortText < best) then
+                              best = item.sortText
+                           end
+                        end
+                        -- si todos tienen el mismo sortText, el LSP no tiene favorito
+                        local all_same = true
+                        for _, item in ipairs(items) do
+                           if item.sortText ~= best then
+                              all_same = false
+                              break
+                           end
+                        end
+                        if best and not all_same then
+                           for _, item in ipairs(items) do
+                              if item.sortText == best then
+                                 item.score_offset = (item.score_offset or 0) + 100
+                              end
+                           end
+                        end
+                        return items
+                     end,
                   },
                   snippets = {
                      opts = {
