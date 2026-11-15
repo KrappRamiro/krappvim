@@ -1,5 +1,6 @@
 -- flash.nvim: navegación con search labels (treesitter mode).
--- - S (n/x/o):  treesitter  ->  selecciona el nodo más cercano del árbol
+-- - S (n/o):    treesitter  ->  selecciona el nodo más cercano del árbol
+--   (en visual NO: ahí `S` es de nvim-surround, envolver la selección)
 -- - r (o):      remote      ->  motion en una ubicación remota (avanzado)
 -- - R (o/x):    treesitter search
 -- - <c-s> (c):  toggle flash mientras buscás con / o ?
@@ -8,7 +9,7 @@ return {
    "flash.nvim",
    auto_enable = true,
    keys = {
-      { "S", mode = { "n", "x", "o" } },
+      { "S", mode = { "n", "o" } },
       { "r", mode = "o" },
       { "R", mode = { "o", "x" } },
       { "<c-s>", mode = "c" },
@@ -20,7 +21,8 @@ return {
 
       -- Importante (de la docu oficial): NO usar :lua en los keymaps.
       -- Hay que pasar funciones para que dot-repeat (.) funcione bien.
-      vim.keymap.set({ "n", "x", "o" }, "S", function()
+      -- sin modo "x": al cargar flash le pisaba la `S` visual a nvim-surround
+      vim.keymap.set({ "n", "o" }, "S", function()
          flash.treesitter()
       end, { desc = "Flash Treesitter" })
       vim.keymap.set("o", "r", function()
