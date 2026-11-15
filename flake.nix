@@ -73,10 +73,53 @@
           default = self.packages.${system}.neovim;
         }
       );
+      # `nix fmt` formatea los archivos nix
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
+      # `nix flake check`: lo que tiene que pasar antes de cada commit.
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+          kvim = self.packages.${system}.neovim;
+        in
+        {
+          # formato y lint de Lua y Nix
+          lint =
+            pkgs.runCommand "krappvim-lint"
+              {
+                nativeBuildInputs = [
+                  pkgs.stylua
+                  pkgs.selene
+                  pkgs.nixfmt
+                ];
+              }
+              ''
+                cd ${self}
+                stylua --check .
+                selene init.lua lua scripts
+                nixfmt --check flake.nix module.nix
+                touch $out
+              '';
+          # arranca kvim headless y carga los plugins lazy (scripts/smoke.lua)
+          smoke =
+            pkgs.runCommand "krappvim-smoke"
+              {
+                nativeBuildInputs = [
+                  kvim
+                  pkgs.git
+                ];
+              }
+              ''
+                export HOME=$TMPDIR
+                kvim --headless -c "luafile ${self}/scripts/smoke.lua"
+                touch $out
+              '';
+        }
+      );
       # `wrappers.neovim.enable = true`
       nixosModules = {
         default = self.nixosModules.neovim;
-        neovim = wrappers.lib.mkInstallModule {
+        neovim = wrappers.lib.getInstallModule {
           name = "neovim";
           value = module;
         };
@@ -86,14 +129,8 @@
       # But that is how you enable it.
       homeModules = {
         default = self.homeModules.neovim;
-        neovim = wrappers.lib.mkInstallModule {
-          name = "neovim";
-          value = module;
-          loc = [
-            "home"
-            "packages"
-          ];
-        };
+        # el mismo módulo sirve para NixOS y para home-manager
+        neovim = self.nixosModules.neovim;
       };
     };
 }

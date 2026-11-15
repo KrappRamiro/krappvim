@@ -2,7 +2,7 @@ return {
    "gitsigns.nvim",
    auto_enable = true,
    event = "DeferredUIEnter",
-   after = function(plugin)
+   after = function(_)
       require("gitsigns").setup({
          -- See `:help gitsigns.txt`
          signs = {

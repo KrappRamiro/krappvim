@@ -6,7 +6,7 @@ return {
    -- ft = "",
    -- keys = "",
    -- colorscheme = "",
-   after = function(plugin)
+   after = function(_)
       require("which-key").setup({
          preset = "modern",
          delay = 100,

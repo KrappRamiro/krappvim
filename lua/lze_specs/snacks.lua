@@ -19,7 +19,7 @@ return {
       -- priority only affects startup plugins
       -- unless otherwise specified by a particular handler
       priority = 1000,
-      after = function(plugin)
+      after = function(_)
          -- Define colors for indent
          vim.api.nvim_set_hl(0, "MySnacksIndent", { fg = "#32a88f" })
 

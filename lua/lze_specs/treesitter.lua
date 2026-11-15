@@ -3,7 +3,7 @@ return {
       "nvim-treesitter",
       lazy = false,
       auto_enable = true,
-      after = function(plugin)
+      after = function(_)
          ---@param buf integer
          ---@param language string
          local function treesitter_try_attach(buf, language)
@@ -51,13 +51,13 @@ return {
       "nvim-treesitter-textobjects",
       auto_enable = true,
       lazy = false,
-      before = function(plugin)
+      before = function(_)
          -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects/tree/main?tab=readme-ov-file#using-a-package-manager
          -- Disable entire built-in ftplugin mappings to avoid conflicts.
          -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
          vim.g.no_plugin_maps = true
       end,
-      after = function(plugin)
+      after = function(_)
          require("nvim-treesitter-textobjects").setup({
             select = {
                -- Automatically jump forward to textobj, similar to targets.vim
