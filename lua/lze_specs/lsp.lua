@@ -154,10 +154,11 @@ return {
                   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                end, "[W]orkspace [L]ist Folders")
 
-               -- Create a command `:Format` local to the LSP buffer
+               -- `:Format` local al buffer. Pasa por conform (igual que el
+               -- format on save y <leader>FF) para que los tres formateen igual.
                vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-                  vim.lsp.buf.format()
-               end, { desc = "Format current buffer with LSP" })
+                  require("conform").format({ bufnr = bufnr, lsp_format = "fallback" })
+               end, { desc = "Format current buffer (conform, LSP fallback)" })
             end,
          })
       end,
@@ -264,9 +265,8 @@ return {
       },
    },
    {
-      -- NOTE: bashls usa shellcheck por dentro para diagnostics, así que se solapa
-      -- con `sh = { "shellcheck" }` y `bash = { "shellcheck" }` en lint.lua.
-      -- Si querés evitar duplicados, sacalos de lint.lua.
+      -- NOTE: bashls usa shellcheck por dentro para diagnostics (necesita el
+      -- binario `shellcheck` de module.nix). Por eso lint.lua no lo corre.
       "bashls",
       lsp = {
          filetypes = { "sh", "bash" },

@@ -16,8 +16,8 @@ return {
          -- Referencia: https://github.com/LazyVim/LazyVim
          lua = { "selene" },
          nix = { "statix", "deadnix" },
-         sh = { "shellcheck" },
-         bash = { "shellcheck" },
+         -- sh/bash: sin linter acá. bashls (lsp.lua) ya corre shellcheck por
+         -- dentro, tenerlo también acá duplicaba cada diagnostic.
          -- rust: sin linter acá. rust-analyzer ya corre clippy (check.command
          -- en lsp.lua); el linter "clippy" de nvim-lint compilaba el proyecto
          -- entero otra vez en cada guardado y duplicaba los diagnostics.

@@ -101,8 +101,9 @@ vim.g.maplocalleader = " "
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
--- allow .nvim.lua in current dir and parents (project config)
-vim.o.exrc = false -- can be toggled off in that file to stop it from searching further
+-- exrc carga un .nvim.lua del directorio actual (config por proyecto).
+-- Apagado: ejecutar Lua de cualquier repo clonado es un riesgo.
+vim.o.exrc = false
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`

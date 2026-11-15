@@ -11,7 +11,10 @@ return {
    -- de lazy-loading de la doc de conform, doc/recipes.md)
    event = "BufWritePre",
    cmd = { "ConformInfo" },
-   after = function(plugin)
+   -- :Format (lsp.lua) hace require("conform") y puede correr antes del primer
+   -- guardado; con esto lze carga el plugin en ese momento
+   on_require = "conform",
+   after = function(_)
       local conform = require("conform")
 
       conform.setup({
