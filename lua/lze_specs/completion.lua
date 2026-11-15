@@ -127,37 +127,43 @@ return {
                   },
                   lsp = {
                      score_offset = 40,
-                     -- rust-analyzer marca sus mejores sugerencias (Ok/Err en un match,
-                     -- metodos faltantes en un impl) con el sortText mas bajo. Blink
-                     -- ordena primero por score (que incluye proximity y frecency), asi
-                     -- que esas sugerencias quedaban abajo. Les damos +100 para que
-                     -- ganen, y proximity/frecency quedan justo despues.
+                     -- Blink ordena primero por score (fuzzy + proximity + frecency) y
+                     -- usa el sortText del LSP solo para desempatar. rust-analyzer pone
+                     -- en el sortText su propio ranking: 8 dígitos hex, más bajo = más
+                     -- relevante. Valores medidos con scripts/probe-completion.lua:
+                     --   7fffffd9  el tipo coincide exacto (Ok/Err donde va un Result)
+                     --   7fffffe5  variable local
+                     --   7fffffe7  item ya importado
+                     --   7ffffff6  neutro
+                     --   80000002  item que todavía hay que importar
+                     -- Sin esto, una diferencia de 2 puntos de fuzzy le ganaba a
+                     -- "ya importado" contra "hay que importarlo". Convertimos la
+                     -- distancia al valor neutro en un bonus graduado: 1 punto por
+                     -- escalón, entre -20 y +40.
+                     -- No usar un bonus fijo grande (antes era +100 al mejor sortText):
+                     -- con `display.in` ponía `into()` muy arriba de `init()`.
                      transform_items = function(_, items)
-                        local best
                         for _, item in ipairs(items) do
-                           if item.sortText and (best == nil or item.sortText < best) then
-                              best = item.sortText
-                           end
-                        end
-                        -- si todos tienen el mismo sortText, el LSP no tiene favorito
-                        local all_same = true
-                        for _, item in ipairs(items) do
-                           if item.sortText ~= best then
-                              all_same = false
-                              break
-                           end
-                        end
-                        if best and not all_same then
-                           for _, item in ipairs(items) do
-                              if item.sortText == best then
-                                 item.score_offset = (item.score_offset or 0) + 100
-                              end
+                           -- solo sortText con el formato de rust-analyzer; el de otros
+                           -- LSP es texto libre y queda como desempate normal
+                           local rank = item.sortText
+                              and item.sortText:match("^%x%x%x%x%x%x%x%x$")
+                              and tonumber(item.sortText, 16)
+                           if rank then
+                              local bonus = math.max(-20, math.min(40, 0x7ffffff6 - rank))
+                              item.score_offset = (item.score_offset or 0) + bonus
                            end
                         end
                         return items
                      end,
                   },
                   snippets = {
+                     -- Después de un trigger character (el `.` de `foo.`) solo van
+                     -- métodos y campos, ahí los snippets son ruido (aparecían
+                     -- `repr`, `macro_rules`, etc). Receta de la doc de blink.
+                     should_show_items = function(ctx)
+                        return ctx.trigger.initial_kind ~= "trigger_character"
+                     end,
                      opts = {
                         -- friendly-snippets registra los snippets de relm4 (un
                         -- framework de GUI con GTK) para TODO archivo rust, así que
