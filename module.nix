@@ -58,18 +58,6 @@ inputs:
       }
     );
   };
-  # If you don't want the boilerplate of a whole option in settings, you could just pass stuff
-  config.info.testvalue = {
-    some = "stuff";
-    goes = "here";
-  };
-  # and grab it in lua with `require(vim.g.nix_info_plugin_name)(nil, "info", "testvalue", "some") == "stuff"`
-  # Tip: in your nvim command line run:
-  # `:lua require('lzextras').debug.display(require(vim.g.nix_info_plugin_name))`
-  config.settings.anothertestvalue = {
-    settings = "can also accept freeform values";
-  };
-
   # If the defaults are fine, you can just provide the `.data` field
   # In this case, a list of specs, instead of a single plugin like above
   config.specs.lze = [
@@ -250,20 +238,10 @@ inputs:
 
   # This submodule modifies both levels of your specs
   config.specMods =
-    {
-      # When this module is ran in an inner list,
-      # this will contain `config` of the parent spec
-      parentSpec ? null,
-      # and this will contain `options`
-      # otherwise they will be `null`
-      parentOpts ? null,
-      parentName ? null,
-      # and then config from this one, as normal
-      config,
-      # and the other module arguments.
-      ...
-    }:
-    {
+    # Además de `config`, este submódulo puede pedir `parentSpec`, `parentOpts`
+    # y `parentName` (el spec que lo contiene, o null si es de primer nivel).
+    # No los usamos, así que no los pedimos: deadnix marca los argumentos sin uso.
+    _: {
       # you could use this to change defaults for the specs
       # config.collateGrammars = lib.mkDefault (parentSpec.collateGrammars or false);
       # config.autoconfig = lib.mkDefault (parentSpec.autoconfig or false);

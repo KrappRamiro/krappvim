@@ -1,0 +1,6 @@
+# Config de statix (linter de estilo para Nix). Lo corre `nix flake check`.
+#
+# repeated_keys pide juntar `config.a = ...; config.b = ...;` en un solo bloque
+# `config = { a = ...; b = ...; };`. En module.nix y flake.nix preferimos la
+# forma larga: cada línea se lee sola y es más fácil de comentar y de mover.
+disabled = [ "repeated_keys" ]

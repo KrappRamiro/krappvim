@@ -25,7 +25,7 @@ plain language, but do not hand the work back to them.
 Run before saying a change is done:
 
 ```sh
-nix flake check --print-build-logs   # lint (stylua, selene, nixfmt) + smoke test
+nix flake check --print-build-logs   # lint (stylua, selene, nixfmt, statix, deadnix) + smoke test
 ```
 
 Auto-fix formatting:

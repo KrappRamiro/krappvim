@@ -52,7 +52,7 @@
     in
     {
       overlays = {
-        neovim = final: prev: { neovim = wrapper.config.wrap { pkgs = final; }; };
+        neovim = final: _prev: { neovim = wrapper.config.wrap { pkgs = final; }; };
         default = self.overlays.neovim;
       };
       wrapperModules = {
@@ -91,6 +91,8 @@
                   pkgs.stylua
                   pkgs.selene
                   pkgs.nixfmt
+                  pkgs.statix
+                  pkgs.deadnix
                 ];
               }
               ''
@@ -98,6 +100,9 @@
                 stylua --check .
                 selene init.lua lua scripts
                 nixfmt --check flake.nix module.nix
+                # statix lee statix.toml (ahí está la regla que apagamos y por qué)
+                statix check .
+                deadnix --fail flake.nix module.nix
                 touch $out
               '';
           # arranca kvim headless y carga los plugins lazy (scripts/smoke.lua)
