@@ -16,10 +16,16 @@
 --   return {
 --      { line = 41, text = "        ", title = "match arm vacío" },
 --      { line = 95, text = "    display.in", title = "método con prefijo" },
+--      { line = 95, text = "    display", keys = ".in", title = "tipeando el punto" },
 --   }
 --
+-- Sin `keys`, el menú se abre con show() (igual que apretar <C-space>). Con
+-- `keys`, esas teclas se tipean de verdad después de `text`. Hace falta para
+-- probar lo que depende de CÓMO se abrió el menú: por ejemplo el filtro de
+-- snippets después de un `.`, que con show() nunca se activa.
+--
 -- Variables opcionales:
---   PROBE_LSP   nombre del cliente LSP a esperar (default: rust_analyzer)
+--   PROBE_LSP   nombre del cliente LSP a esperar (default: rust-analyzer, el de rustaceanvim)
 --   PROBE_WAIT  segundos de espera a que el LSP indexe (default: 60)
 --   PROBE_TOP   cuántos items listar por caso (default: 12)
 --
@@ -30,7 +36,7 @@
 
 local cases = dofile(assert(os.getenv("PROBE_CASES"), "falta PROBE_CASES"))
 local out_path = assert(os.getenv("PROBE_OUT"), "falta PROBE_OUT")
-local lsp_name = os.getenv("PROBE_LSP") or "rust_analyzer"
+local lsp_name = os.getenv("PROBE_LSP") or "rust-analyzer"
 local wait_s = tonumber(os.getenv("PROBE_WAIT")) or 60
 local top = tonumber(os.getenv("PROBE_TOP")) or 12
 
@@ -69,7 +75,18 @@ local function run_case(index)
    vim.api.nvim_win_set_cursor(0, { case.line + 1, #case.text })
    vim.cmd.startinsert({ bang = true })
    vim.defer_fn(function()
-      require("blink.cmp").show()
+      if case.keys then
+         -- De a una tecla, con pausa: si llegan todas juntas blink no llega a
+         -- ver el `.` como trigger character y el caso mide otra cosa.
+         -- "t": como si las tecleara el usuario (dispara InsertCharPre y demás)
+         for i = 1, #case.keys do
+            vim.defer_fn(function()
+               vim.api.nvim_feedkeys(case.keys:sub(i, i), "t", false)
+            end, (i - 1) * 400)
+         end
+      else
+         require("blink.cmp").show()
+      end
       -- 3s: el LSP puede tardar en responder en proyectos grandes
       vim.defer_fn(function()
          dump(case.title or case.text)
@@ -79,7 +96,7 @@ local function run_case(index)
          vim.defer_fn(function()
             run_case(index + 1)
          end, 500)
-      end, 3000)
+      end, 3000 + #(case.keys or "") * 400)
    end, 1500)
 end
 

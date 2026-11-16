@@ -58,6 +58,11 @@ return {
          { "<leader>s", group = "[s]earch", icon = "󰍉" },
          { "<leader>s_", hidden = true },
 
+         -- <leader>rn es rename en cualquier LSP; el resto de <leader>r* son los
+         -- keymaps de Rust, que solo existen en buffers .rs (ver rustaceanvim.lua)
+         { "<leader>r", group = "[r]ust / rename", icon = "󱘗" },
+         { "<leader>r_", hidden = true },
+
          { "<leader>t", group = "[t]oggles", icon = "󰔡" },
          { "<leader>t_", hidden = true },
          { "<leader>th", desc = "Toggle inlay [H]ints" },

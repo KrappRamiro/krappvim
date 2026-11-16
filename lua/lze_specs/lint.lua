@@ -18,8 +18,8 @@ return {
          nix = { "statix", "deadnix" },
          -- sh/bash: sin linter acá. bashls (lsp.lua) ya corre shellcheck por
          -- dentro, tenerlo también acá duplicaba cada diagnostic.
-         -- rust: sin linter acá. rust-analyzer ya corre clippy (check.command
-         -- en lsp.lua); el linter "clippy" de nvim-lint compilaba el proyecto
+         -- rust: sin linter acá. rust-analyzer ya corre clippy (enable_clippy
+         -- en rustaceanvim.lua); el linter "clippy" de nvim-lint compilaba el proyecto
          -- entero otra vez en cada guardado y duplicaba los diagnostics.
          -- python: ruff corre como LSP (lsp.lua), da los mismos diagnostics
          -- mientras escribís y además code actions.

@@ -175,6 +175,7 @@ inputs:
       }
       # completado y acciones de crates en Cargo.toml (versiones, features)
       crates-nvim
+      rustaceanvim
       # catálogo de schemas de SchemaStore.org para jsonls y yamlls
       SchemaStore-nvim
       # resalta TODO/NOTE/FIX/HACK en comentarios y los lista en el picker

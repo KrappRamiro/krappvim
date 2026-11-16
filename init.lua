@@ -240,6 +240,7 @@ nixInfo.lze.load({
    { import = "lze_specs.dropbar" },
    { import = "lze_specs.flash" },
    { import = "lze_specs.hop" },
+   { import = "lze_specs.rustaceanvim" },
    { import = "lze_specs.ccc" },
    { import = "lze_specs.colorizer" },
    { import = "lze_specs.multicursor" },

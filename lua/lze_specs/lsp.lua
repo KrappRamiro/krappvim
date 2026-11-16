@@ -5,7 +5,7 @@
 -- Cada server es un bloque con esta estructura:
 --
 --    {
---       "<NOMBRE_DEL_SERVER>",         -- ej: "rust_analyzer"
+--       "<NOMBRE_DEL_SERVER>",         -- ej: "gopls"
 --       lsp = {
 --          filetypes = { "<FT1>", ... }, -- los filetypes que dispara este server
 --          settings = {
@@ -272,24 +272,7 @@ return {
          filetypes = { "sh", "bash" },
       },
    },
-   {
-      -- NOTE: si ves diagnosticos duplicados, es porque tanto el LSP como el Linter estan dando diagnosticos y se estan solapando
-      "rust_analyzer",
-      lsp = {
-         filetypes = { "rust" },
-         settings = {
-            -- la clave lleva guión, por eso necesita la sintaxis ["..."]
-            ["rust-analyzer"] = {
-               check = {
-                  command = "clippy", -- usa clippy en lugar de cargo check
-               },
-               cargo = {
-                  allFeatures = true,
-               },
-            },
-         },
-      },
-   },
+   -- Rust no está acá: lo maneja rustaceanvim (ver lze_specs/rustaceanvim.lua)
    {
       -- basedpyright es un fork comunitario de pyright con más features
       -- (mejor inferencia, más diagnostics, configurables sin licencia comercial)

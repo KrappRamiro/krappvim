@@ -59,6 +59,9 @@ over memory: plugin APIs change often.
   import it in `init.lua`, and add a row to `README.md`.
 - Adding an LSP server: follow the header comment in `lua/lze_specs/lsp.lua`,
   and add the binary to `runtimePkgs` in `module.nix`.
+  Rust is the exception: rustaceanvim starts rust-analyzer
+  (`lua/lze_specs/rustaceanvim.lua`). Never add a `rust_analyzer` spec to
+  `lsp.lua`, that gives two clients on the same buffer.
 - Lazy-load every plugin (`event`, `ft`, `keys`, `cmd`, `on_require`). If code
   calls `require("x")` on a lazy plugin from outside its spec, give that spec
   `on_require = "x"`.

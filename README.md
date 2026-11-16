@@ -62,6 +62,7 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | [tiny-code-action](https://github.com/rachartier/tiny-code-action.nvim) | LSP code actions with a Snacks picker and delta diff preview |
 | [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | Ready-made snippets for many languages, served by blink.cmp's `snippets` source |
 | [crates.nvim](https://github.com/saecki/crates.nvim) | `Cargo.toml` helper: crate name, version, and feature completion, outdated-version hints, and code actions (in-process LSP) |
+| [rustaceanvim](https://github.com/mrcjkb/rustaceanvim) | Runs rust-analyzer and adds `:RustLsp`: expand macros, open docs.rs, explain errors, run tests. Rust-only keymaps live under `<leader>r` |
 | [SchemaStore.nvim](https://github.com/b0o/SchemaStore.nvim) | Schema catalog for `jsonls`, `yamlls`, and `taplo` (`package.json`, GitHub workflows, `Cargo.toml`, etc.) |
 
 ### Formatting & Linting
@@ -142,7 +143,7 @@ Managed via `nvim-lspconfig`, binaries provided by Nix.
 | `lua_ls` | Lua |
 | `nixd` | Nix |
 | `bashls` | Shell / Bash |
-| `rust_analyzer` | Rust (with clippy) |
+| `rust-analyzer` | Rust (with clippy). Started by rustaceanvim, not by nvim-lspconfig |
 | `basedpyright` | Python |
 | `terraformls` | Terraform / OpenTofu |
 | `ts_ls` | JavaScript / TypeScript |
@@ -166,3 +167,20 @@ nix build .
 ```
 
 Run as `kvim`.
+
+## Checks
+
+```bash
+nix flake check --print-build-logs
+```
+
+| Check | What it does |
+|-------|--------------|
+| `lint` | stylua, selene, nixfmt, statix, and deadnix |
+| `smoke` | Starts `kvim` headless and loads the lazy plugins (`scripts/smoke.lua`) |
+
+The same command runs in GitHub Actions on every push and pull request.
+
+`scripts/probe-completion.lua` dumps what blink.cmp suggests, in order and with
+scores, inside a real project. Use it to measure a ranking change before and
+after. Usage is in the file header.
