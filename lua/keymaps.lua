@@ -20,26 +20,11 @@ vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Move to right window
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves Line Down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves Line Up" })
 
--- Better scrolling: cursor centrado sin pelear con la animación de snacks.scroll.
--- En vez de `<C-d>zz` (que tiene race condition con el smooth scroll), levantamos
--- `scrolloff` a 999 antes del scroll así vim mantiene el cursor centrado de
--- forma nativa - snacks anima sin conflicto. Después restauramos a 10.
--- Ver https://github.com/folke/snacks.nvim/discussions/1030#discussioncomment-12109404
-vim.keymap.set("n", "<C-d>", function()
-   vim.wo.scrolloff = 999
-   vim.defer_fn(function()
-      vim.wo.scrolloff = 10
-   end, 500)
-   return "<C-d>"
-end, { expr = true, desc = "Scroll Down" })
-
-vim.keymap.set("n", "<C-u>", function()
-   vim.wo.scrolloff = 999
-   vim.defer_fn(function()
-      vim.wo.scrolloff = 10
-   end, 500)
-   return "<C-u>"
-end, { expr = true, desc = "Scroll Up" })
+-- Better scrolling: media página y después `zz` para dejar el cursor centrado.
+-- Funciona porque no hay smooth scroll (snacks.scroll está apagado, ver
+-- lze_specs/snacks.lua): el salto es instantáneo y `zz` no compite con nada.
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll Down" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll Up" })
 
 --  Better search results
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next Search Result" })

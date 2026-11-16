@@ -44,13 +44,11 @@ return {
             -- Resalta automáticamente las referencias del símbolo bajo el cursor
             -- vía LSP. `]]` y `[[` saltan entre ellas.
             words = {},
-            -- Smooth scrolling para `<C-d>`, `<C-u>`, `<C-f>`, `<C-b>`, `gg`, `G`, etc.
-            scroll = {
-               animate = {
-                  duration = { step = 20, total = 150 },
-                  easing = "linear",
-               },
-            },
+            -- snacks.scroll (smooth scrolling) queda apagado a propósito: no lo
+            -- declaramos acá, y snacks solo activa los módulos declarados.
+            -- Medido: cada `<C-d>` tardaba ~140ms en vez de ~5ms, y al apretar
+            -- rápido cada pulsación arrancaba desde la mitad de la animación
+            -- anterior, así que el scroll avanzaba menos de lo pedido.
             -- Abrir el archivo / línea / commit / repo actual en el browser (GitHub).
             -- Keymap: `<leader>gB` (n + v).
             gitbrowse = {},

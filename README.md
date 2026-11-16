@@ -34,7 +34,7 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 
 | Plugin | Function |
 |--------|----------|
-| [snacks.nvim](https://github.com/folke/snacks.nvim) | Kitchen sink: fuzzy picker, file explorer, dashboard, terminal, lazygit, image viewer, scroll animation, git browse, LSP rename, and more |
+| [snacks.nvim](https://github.com/folke/snacks.nvim) | Kitchen sink: fuzzy picker, file explorer, dashboard, terminal, lazygit, image viewer, git browse, LSP rename, and more |
 | [flash.nvim](https://github.com/folke/flash.nvim) | Jump anywhere on screen with 1 or 2 key labels |
 | [hop.nvim](https://github.com/smoka7/hop.nvim) | EasyMotion-style navigation |
 | [grug-far.nvim](https://github.com/MagicDuck/grug-far.nvim) | Project-wide find & replace with live preview |
