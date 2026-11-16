@@ -75,8 +75,10 @@ over memory: plugin APIs change often.
 ## Release flow
 
 1. Commit and push here (personal repo, see the global git rules).
-2. In `~/nixos-config`: `nix flake update krappvim`, then the user runs the
-   deploy (it needs sudo with a password, so Claude cannot run it).
+2. In `~/nixos-config`: `nix flake update krappvim`, build the host without
+   switching, commit and push the lock, then `just deploy`. On `thinkpad`,
+   `sudo nixos-rebuild` needs no password, so Claude can run the deploy, but
+   only when the user has said to deploy in that session.
 
 ## Reference
 
