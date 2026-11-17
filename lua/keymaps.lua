@@ -2,19 +2,9 @@
 -- snacks keymaps are NOT here
 -- See `:help vim.keymap.set()`
 
--- Moving between windoes
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
-
--- Mismas keys pero desde TERMINAL mode (cuando estás dentro de :term o de
--- la float de Snacks). El <C-\\><C-n> sale del terminal mode al modo normal
--- antes de hacer el <C-w>h/j/k/l.
-vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
-vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Move to bottom window" })
-vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
-vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Move to right window" })
+-- Moverse entre ventanas (<C-h/j/k/l>), redimensionar (<A-h/j/k/l>) e
+-- intercambiar buffers (<A-S-h/j/k/l>): todo eso vive en
+-- lze_specs/smart_splits.lua.
 
 -- Moving lines
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves Line Down" })

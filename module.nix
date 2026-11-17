@@ -213,6 +213,8 @@ inputs:
       multicursor-nvim
       # hardtime: te corrige malos hábitos de motion (hjkl spam, etc)
       hardtime-nvim
+      # smart-splits: mover/redimensionar/intercambiar splits con h/j/k/l
+      smart-splits-nvim
       # lensline: muestra info contextual arriba de cada función
       # (ref count via LSP, last git author, etc.)
       lensline-nvim

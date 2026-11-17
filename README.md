@@ -37,6 +37,7 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | [snacks.nvim](https://github.com/folke/snacks.nvim) | Kitchen sink: fuzzy picker, file explorer, dashboard, terminal, lazygit, image viewer, git browse, LSP rename, and more |
 | [flash.nvim](https://github.com/folke/flash.nvim) | Jump anywhere on screen with 1 or 2 key labels |
 | [hop.nvim](https://github.com/smoka7/hop.nvim) | EasyMotion-style navigation |
+| [smart-splits.nvim](https://github.com/mrjones2014/smart-splits.nvim) | Move (`<C-hjkl>`), resize (`<A-hjkl>`) and swap (`<A-S-hjkl>`) splits, wraps at the edges |
 | [grug-far.nvim](https://github.com/MagicDuck/grug-far.nvim) | Project-wide find & replace with live preview |
 
 ### Editing
