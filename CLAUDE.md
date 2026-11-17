@@ -76,9 +76,16 @@ over memory: plugin APIs change often.
 
 1. Commit and push here (personal repo, see the global git rules).
 2. In `~/nixos-config`: `nix flake update krappvim`, build the host without
-   switching, commit and push the lock, then `just deploy`. On `thinkpad`,
-   `sudo nixos-rebuild` needs no password, so Claude can run the deploy, but
-   only when the user has said to deploy in that session.
+   switching, commit and push the lock, then apply it yourself to test the
+   new `kvim`: `just home-switch` on `ubuntu-gocloud`, `just deploy` on NixOS
+   hosts. On `thinkpad`, `sudo nixos-rebuild` needs no password; on
+   `desktop` it does, so ask the user to run `! just deploy`.
+
+The `personal-setup` skill in `~/nixos-config`
+(`modules/home/cli/claude_code_skills/personal-setup.md`) summarizes this
+repo for sessions started elsewhere. When you change the layout, the
+conventions for adding plugins or LSP servers, the checks, or this release
+flow, update that skill too.
 
 ## Reference
 
