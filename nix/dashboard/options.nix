@@ -25,6 +25,75 @@ let
       default = { };
     };
 
+  # Temas de drop.nvim (lua/drop/themes.lua del plugin). "auto" elige según
+  # la fecha: hojas en otoño, nieve en invierno.
+  dropThemes = [
+    "auto"
+    "april_fools"
+    "arcade"
+    "art"
+    "bakery"
+    "beach"
+    "binary"
+    "bugs"
+    "business"
+    "candy"
+    "cards"
+    "carnival"
+    "casino"
+    "cats"
+    "coffee"
+    "cyberpunk"
+    "deepsea"
+    "desert"
+    "dice"
+    "diner"
+    "easter"
+    "emotional"
+    "explorer"
+    "fantasy"
+    "farm"
+    "garden"
+    "halloween"
+    "jungle"
+    "leaves"
+    "lunar"
+    "magical"
+    "mathematical"
+    "matrix"
+    "medieval"
+    "musical"
+    "mystery"
+    "mystical"
+    "new_year"
+    "nocturnal"
+    "ocean"
+    "pirate"
+    "retro"
+    "snow"
+    "spa"
+    "space"
+    "sports"
+    "spring"
+    "stars"
+    "steampunk"
+    "st_patricks_day"
+    "summer"
+    "temporal"
+    "us_thanksgiving"
+    "travel"
+    "tropical"
+    "urban"
+    "us_independence_day"
+    "valentines_day"
+    "wilderness"
+    "wildwest"
+    "winter_wonderland"
+    "xmas"
+    "zodiac"
+    "zoo"
+  ];
+
   # Imagen por defecto de las piezas image y chafa: el copo de NixOS. Así un
   # preset funciona en una línea y los checks tienen una imagen real.
   snowflake = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
@@ -293,7 +362,7 @@ in
     };
     overlay.drop = sub {
       enable = bool false "Cosas que caen sobre el dashboard (drop.nvim).";
-      theme = str "auto" "Tema de drop.nvim (auto, leaves, snow, xmas y otros).";
+      theme = opt (types.enum dropThemes) "auto" "Tema de drop.nvim (auto: según la fecha).";
       screensaver =
         opt (types.either types.bool types.int) false
           "Segundos sin tocar nada para que drop tape la pantalla (false: nunca).";

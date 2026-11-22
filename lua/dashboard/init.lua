@@ -196,11 +196,20 @@ function M.build(cfg, ctx)
 end
 
 -- Lo que llama lua/lze_specs/snacks.lua: devuelve el `dashboard = { ... }`
--- de Snacks.setup y deja registrados los hooks de apertura.
-function M.setup()
-   local cfg = nixInfo(nil, "settings", "dashboard")
+-- de Snacks.setup y deja registrados los hooks de apertura. `cfg` es para
+-- los tests; normalmente viene de Nix.
+function M.setup(cfg)
+   cfg = cfg or nixInfo(nil, "settings", "dashboard")
    if not cfg then
       return {}
+   end
+   local ss = cfg.extras and cfg.extras.screensaver
+   if ss and ss.enable then
+      require("milli").screensaver(require("dashboard.extras").screensaver_opts(ss))
+   end
+   if cfg.preset == "ministarter" then
+      -- lua/lze_specs/mini.lua configura mini.starter
+      return { enabled = false }
    end
    local opts, hooks = M.build(cfg, { columns = vim.o.columns })
    if #hooks > 0 then

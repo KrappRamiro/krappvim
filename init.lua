@@ -252,4 +252,6 @@ nixInfo.lze.load({
    { import = "lze_specs.sidekick" },
    { import = "lze_specs.smart_splits" },
    { import = "lze_specs.ufo" },
+   { import = "lze_specs.drop" },
+   { import = "lze_specs.cellular_automaton" },
 })

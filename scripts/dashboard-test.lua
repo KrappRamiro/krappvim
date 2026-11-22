@@ -301,6 +301,45 @@ function tests.test_every_panel_kind_builds()
    check(#warned == 0, "hubo avisos: " .. table.concat(warned, " | "))
 end
 
+-- Overlay, extras y mini.starter (Task 5)
+
+function tests.test_drop_config()
+   local opts =
+      require("dashboard.extras").drop_opts({ enable = true, theme = "snow", screensaver = 60 })
+   check(vim.deep_equal(opts.filetypes, { "snacks_dashboard" }), "filetypes no es snacks_dashboard")
+   check(opts.theme == "snow", "theme no es snow")
+   check(opts.screensaver == 60000, "screensaver no pasó a milisegundos")
+   local off =
+      require("dashboard.extras").drop_opts({ enable = true, theme = "auto", screensaver = false })
+   check(off.screensaver == false, "screensaver false no quedó false")
+end
+
+function tests.test_screensaver_opts()
+   local e = require("dashboard.extras")
+   local s = e.screensaver_opts({ enable = true, shader = "rain", splash = nil, after = 120 })
+   check(s.shader == "rain" and s.after == 120 and s.splash == nil, "shader: " .. vim.inspect(s))
+   local t = e.screensaver_opts({ enable = true, shader = "rain", splash = "fire", after = 120 })
+   check(
+      t.splash == "fire" and t.shader == nil,
+      "con splash no tiene que ir shader: " .. vim.inspect(t)
+   )
+end
+
+function tests.test_ministarter_disables_snacks()
+   local cfg = cfg_with({ preset = "ministarter", header = { kind = "none" } })
+   local opts = require("dashboard").setup(cfg)
+   check(opts.enabled == false, "snacks dashboard sigue habilitado")
+   require("dashboard.extras").ministarter(cfg)
+   local starter = require("mini.starter")
+   check(starter.config ~= nil, "mini.starter no quedó configurado")
+   local items = starter.config.items
+   check(type(items) == "table" and #items == #cfg.keys, "items no son las teclas")
+   check(
+      items[1].action == "lua Snacks.picker.smart()",
+      "action sin ':' inicial: " .. tostring(items[1].action)
+   )
+end
+
 -- Corre todos en orden alfabético para que la salida sea estable.
 local names = vim.tbl_keys(tests)
 table.sort(names)

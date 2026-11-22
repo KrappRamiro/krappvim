@@ -7,6 +7,13 @@ return {
    after = function(_)
       require("mini.icons").setup()
 
+      -- Preset ministarter del dashboard: mini.starter en vez del dashboard
+      -- de snacks (que queda apagado, ver lua/dashboard/init.lua).
+      local dash = nixInfo(nil, "settings", "dashboard")
+      if dash and dash.preset == "ministarter" then
+         require("dashboard.extras").ministarter(dash)
+      end
+
       -- mini.pairs: autocierre de pares. Escribís ( y aparece (), escribís )
       -- al lado de un ) y lo "saltea" en vez de duplicarlo, <BS> entre ()
       -- borra los dos. Ver :help mini.pairs
