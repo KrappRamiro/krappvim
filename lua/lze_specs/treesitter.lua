@@ -23,6 +23,28 @@ return {
             -- enables treesitter based indentation
             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
+            -- Rust: sacamos `0(` y `0[` de indentkeys.
+            -- El indent/rust.vim de Neovim pone indentkeys=0{,0},!^F,o,O,0[,0],0(,0).
+            -- `0(` significa "si el primer carácter de la línea es `(`, recalculá
+            -- la indentación". Esas teclas se pensaron para el motor de rust.vim
+            -- (cindent), pero acá el que calcula es treesitter (la línea de arriba).
+            -- Pasaba esto: dentro de un `match`, en una línea vacía ya indentada,
+            -- escribía `(` para un brazo como `(false, Some(since)) => {`.
+            -- mini.pairs completa `()`, y `()` solo dentro del match es un error
+            -- de sintaxis. Treesitter calculaba la indentación sobre ese árbol
+            -- roto y tiraba la línea a la izquierda. Con `[` pasa lo mismo en
+            -- patrones de slice (`[first, ..] =>`).
+            -- Para `(` y `[` recalcular no aporta: después de Enter la línea ya
+            -- queda bien indentada. Los cierres (`0)`, `0]`, `0}`) se quedan,
+            -- porque esos sí tienen que retroceder un nivel al escribirlos.
+            if language == "rust" then
+               local keys = vim.split(vim.bo[buf].indentkeys, ",", { plain = true })
+               keys = vim.tbl_filter(function(key)
+                  return key ~= "0(" and key ~= "0["
+               end, keys)
+               vim.bo[buf].indentkeys = table.concat(keys, ",")
+            end
+
             return true
          end
 
