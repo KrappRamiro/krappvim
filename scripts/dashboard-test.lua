@@ -185,6 +185,122 @@ function tests.test_milli_splash_file()
    check(opts.preset.header == frame, "no usó el splashFile")
 end
 
+-- Paneles y layout (Task 4)
+
+local POKEMON = { kind = "pokemon", random = 10, height = 30 }
+
+local function with_pane2(opts)
+   local out = {}
+   for _, s in ipairs(flat(opts.sections)) do
+      if s.pane == 2 then
+         out[#out + 1] = s
+      end
+   end
+   return out
+end
+
+function tests.test_two_panes()
+   local opts = build({ panel = { POKEMON }, layout = "two" }, { columns = 200 })
+   local right = with_pane2(opts)
+   check(#right == 1, "esperaba una sección en el panel 2, hay " .. #right)
+   local s = right[1]
+   check(s.random == 10, "random no es 10")
+   check(
+      s.cmd:find("pokemon%-colorscripts %-r %-%-no%-title") ~= nil,
+      "cmd de pokemon: " .. tostring(s.cmd)
+   )
+end
+
+function tests.test_auto_narrow_is_one_column()
+   local opts = build({ panel = { POKEMON }, layout = "auto" }, { columns = 100 })
+   check(#with_pane2(opts) == 0, "con 100 columnas no tiene que haber panel 2")
+end
+
+function tests.test_auto_wide_is_two_columns()
+   local opts = build({ panel = { POKEMON }, layout = "auto" }, { columns = 200 })
+   check(#with_pane2(opts) == 1, "con 200 columnas tiene que haber panel 2")
+end
+
+function tests.test_empty_panel_two_layout()
+   local ok, opts = pcall(build, { panel = {}, layout = "two" })
+   check(ok, "build tiró error: " .. tostring(opts))
+   check(#with_pane2(opts) == 0, "panel vacío no tiene que poner panel 2")
+end
+
+function tests.test_cbonsai_live()
+   local opts =
+      build({ panel = { { kind = "cbonsai", live = true, height = 22 } }, layout = "one" })
+   local s
+   for _, x in ipairs(flat(opts.sections)) do
+      if x.cmd and x.cmd:find("cbonsai") then
+         s = x
+      end
+   end
+   check(s, "no hay sección cbonsai")
+   check(s.cmd:find("^LC_ALL=C cbonsai %-l") ~= nil, "cmd: " .. s.cmd)
+   check(s.ttl == 0, "ttl no es 0")
+   check(s.cmd:find("; sleep 600$") ~= nil, "no termina en sleep")
+end
+
+function tests.test_github_needs_git_root()
+   local opts = build({
+      panel = { { kind = "github", sections = { "commits", "issues", "prs", "diff" }, limit = 3 } },
+      layout = "two",
+   })
+   local right = with_pane2(opts)
+   check(#right == 4, "esperaba 4 secciones de github, hay " .. #right)
+   local orig = Snacks.git.get_root
+   Snacks.git.get_root = function()
+      return nil
+   end
+   local enabled_outside = false
+   for _, s in ipairs(right) do
+      local e = s.enabled
+      check(type(e) == "function", "enabled no es función")
+      enabled_outside = enabled_outside or e()
+   end
+   Snacks.git.get_root = function()
+      return "/repo"
+   end
+   local enabled_inside = true
+   for _, s in ipairs(right) do
+      enabled_inside = enabled_inside and s.enabled()
+   end
+   Snacks.git.get_root = orig
+   check(not enabled_outside, "github aparece fuera de un repo")
+   check(enabled_inside, "github no aparece dentro de un repo")
+end
+
+function tests.test_every_panel_kind_builds()
+   local kinds = {
+      { kind = "pokemon", random = 10, height = 30 },
+      { kind = "krabby", random = 10, height = 30 },
+      { kind = "fastfetch", modules = "OS", logo = "nixos_small", height = 10 },
+      { kind = "github", sections = { "commits" }, limit = 3 },
+      { kind = "git", height = 5 },
+      { kind = "colorscript", name = "square", height = 5 },
+      { kind = "fortune", cow = true, short = true, height = 10 },
+      { kind = "cbonsai", live = false, height = 22 },
+      { kind = "aquarium", height = 20, width = 100 },
+      { kind = "cmatrix", height = 14, width = 70, color = "cyan" },
+      { kind = "lolcat", text = "krapp.vim", font = "slant", height = 7 },
+      { kind = "recent", limit = 8 },
+      { kind = "projects", limit = 5 },
+      { kind = "cmd", cmd = "echo hola", height = 2, ttl = 3600, animated = false, indent = 0 },
+   }
+   local orig = vim.notify
+   local warned = {}
+   vim.notify = function(msg)
+      warned[#warned + 1] = msg
+   end
+   for _, p in ipairs(kinds) do
+      local opts = build({ panel = { p }, layout = "two" })
+      check(#with_pane2(opts) > 0, p.kind .. " no armó secciones")
+   end
+   vim.notify = orig
+   check(#warned == 0, "hubo avisos: " .. table.concat(warned, " | "))
+end
+
 -- Corre todos en orden alfabético para que la salida sea estable.
 local names = vim.tbl_keys(tests)
 table.sort(names)
