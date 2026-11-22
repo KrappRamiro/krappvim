@@ -197,6 +197,11 @@ inputs:
       # markview: render bonito de markdown DENTRO del buffer (treesitter,
       # sin server externo). Toggle via <leader>tm.
       markview-nvim
+      # nvim-ufo: folds con treesitter (fallback indent) sin usar foldexpr,
+      # evita que las funciones nuevas nazcan cerradas (neovim#32759).
+      # promise-async es su dependencia (API de promesas en Lua).
+      nvim-ufo
+      promise-async
       # Estos los traemos via flake.nix (no están en nixpkgs)
       config.nvim-lib.neovimPlugins.tiny-inline-diagnostic
       config.nvim-lib.neovimPlugins.milli

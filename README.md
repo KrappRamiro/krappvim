@@ -78,6 +78,8 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | Plugin | Function |
 |--------|----------|
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax tree parsing — enables accurate highlighting, folding, and text objects |
+| [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) | Folds from treesitter (indent as fallback) without `foldexpr`, so new folds start open. Shows the hidden line count; `zK` peeks a closed fold, `zR`/`zM` open or close all |
+| [promise-async](https://github.com/kevinhwang91/promise-async) | Promise and async/await library for Lua (dependency of nvim-ufo) |
 | [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter-based text objects (`af` = around function, `ac` = around class, etc.) |
 
 ### Git

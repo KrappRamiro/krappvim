@@ -14,11 +14,8 @@ return {
             -- enables syntax highlighting and other treesitter features
             vim.treesitter.start(buf, language)
 
-            -- enables treesitter based folds
-            vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.wo.foldmethod = "expr"
-            -- ensure folds are open to begin with
-            vim.o.foldlevel = 99
+            -- los folds los maneja nvim-ufo (lze_specs/ufo.lua) con estas
+            -- mismas queries de treesitter, sin foldexpr
 
             -- enables treesitter based indentation
             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"

@@ -251,4 +251,5 @@ nixInfo.lze.load({
    { import = "lze_specs.todo_comments" },
    { import = "lze_specs.sidekick" },
    { import = "lze_specs.smart_splits" },
+   { import = "lze_specs.ufo" },
 })
