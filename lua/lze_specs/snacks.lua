@@ -241,6 +241,39 @@ return {
          -- dashboard exista y milli encuentre el anchor (frame 0 = splash_header).
          require("milli").snacks({ splash = SPLASH, loop = true })
 
+         -- Al cerrar el último buffer (`:bdelete`, `<leader><leader>d`) Neovim
+         -- deja un `[No Name]` vacío. Si eso es lo único que queda, volvemos
+         -- al dashboard. El check corre en `vim.schedule` porque durante
+         -- BufDelete el buffer borrado todavía figura en la lista.
+         vim.api.nvim_create_autocmd("BufDelete", {
+            group = vim.api.nvim_create_augroup("krapp_dashboard_on_empty", { clear = true }),
+            callback = function()
+               vim.schedule(function()
+                  local listed = vim.tbl_filter(function(b)
+                     return vim.api.nvim_buf_is_valid(b) and vim.bo[b].buflisted
+                  end, vim.api.nvim_list_bufs())
+                  local buf = vim.api.nvim_get_current_buf()
+                  -- Solo si el único buffer listado es el actual y está vacío:
+                  -- sin nombre, sin tipo especial, sin cambios y sin texto.
+                  local empty = #listed == 1
+                     and listed[1] == buf
+                     and vim.api.nvim_buf_get_name(buf) == ""
+                     and vim.bo[buf].buftype == ""
+                     and not vim.bo[buf].modified
+                     and vim.api.nvim_buf_line_count(buf) == 1
+                     and vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] == ""
+                  -- No abrirlo dentro de una ventana flotante (picker, etc.).
+                  if empty and vim.api.nvim_win_get_config(0).relative == "" then
+                     -- `buf = 0, win = 0` dibuja el dashboard en el buffer y la
+                     -- ventana actuales, igual que al arrancar. Snacks marca el
+                     -- buffer unlisted + bufhidden=wipe, así no queda un
+                     -- `[No Name]` colgado en la lista de buffers.
+                     Snacks.dashboard({ buf = 0, win = 0 })
+                  end
+               end)
+            end,
+         })
+
          -- Handle the backend of those remote commands.
          -- hopefully this can be removed one day
          nixInfo.lazygit_fix = function(path, line)
