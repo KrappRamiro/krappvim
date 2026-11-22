@@ -31,7 +31,7 @@ nix flake check --print-build-logs   # lint (stylua, selene, nixfmt, statix, dea
 Auto-fix formatting:
 
 ```sh
-nix shell --inputs-from . nixpkgs#stylua nixpkgs#nixfmt -c sh -c 'stylua init.lua lua scripts; nixfmt flake.nix module.nix'
+nix shell --inputs-from . nixpkgs#stylua nixpkgs#nixfmt -c sh -c 'stylua init.lua lua scripts; nixfmt flake.nix module.nix $(find nix tests -name "*.nix")'
 ```
 
 The flake only sees files known to git. Run `git add -N <file>` on new files

@@ -99,12 +99,20 @@
                 cd ${self}
                 stylua --check .
                 selene init.lua lua scripts
-                nixfmt --check flake.nix module.nix
+                nixfmt --check flake.nix module.nix $(find nix tests -name "*.nix")
                 # statix lee statix.toml (ahí está la regla que apagamos y por qué)
                 statix check .
-                deadnix --fail flake.nix module.nix
+                deadnix --fail flake.nix module.nix nix tests
                 touch $out
               '';
+          # opciones de settings.dashboard: presets, kinds y lo que llega a Lua
+          dashboard-eval =
+            assert import ./tests/dashboard-eval.nix {
+              krappvim = self.wrappers.neovim;
+              inherit (pkgs) lib;
+              inherit pkgs;
+            };
+            pkgs.runCommand "krappvim-dashboard-eval" { } "touch $out";
           # arranca kvim headless y carga los plugins lazy (scripts/smoke.lua)
           smoke =
             pkgs.runCommand "krappvim-smoke"
