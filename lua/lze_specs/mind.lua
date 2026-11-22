@@ -1,5 +1,10 @@
 return {
    "mind",
+   -- Desactivado: no lo estoy usando. Queda el spec (y el plugin en module.nix)
+   -- por si lo quiero volver a prender: alcanza con borrar esta línea y
+   -- devolverle los atajos. Los atajos <leader>n* se sacaron porque
+   -- <leader>n ahora abre el historial de notificaciones (snacks.lua).
+   enabled = false,
    auto_enable = true,
    cmd = {
       "MindOpenMain",
@@ -7,11 +12,6 @@ return {
       "MindOpenProject",
       "MindClose",
       "MindReloadState",
-   },
-   keys = {
-      { "<leader>nm", "<cmd>MindOpenMain<cr>", desc = "Open [m]ain mind tree" },
-      { "<leader>np", "<cmd>MindOpenSmartProject<cr>", desc = "Open [p]roject mind tree" },
-      { "<leader>nc", "<cmd>MindClose<cr>", desc = "[c]lose mind tree" },
    },
    after = function()
       require("mind").setup({

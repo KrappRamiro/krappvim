@@ -96,7 +96,7 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 
 | Plugin | Function |
 |--------|----------|
-| [mind.nvim](https://github.com/Selyss/mind.nvim) | Hierarchical tree-based note organizer — `<leader>nm` for main tree, `<leader>np` for project tree |
+| [mind.nvim](https://github.com/Selyss/mind.nvim) | Hierarchical tree-based note organizer. Disabled (`enabled = false` in its spec), no keymaps |
 
 ### AI
 

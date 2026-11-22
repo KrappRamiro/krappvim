@@ -324,6 +324,13 @@ return {
             Snacks.lazygit.open()
          end, { desc = "Snacks LazyGit" })
 
+         -- [n]otificaciones: historial de todo lo que pasó por vim.notify
+         -- (noice.lua lo manda a Snacks.notifier). Sirve para leer completos los
+         -- avisos que el popup corta con "…", como los de hardtime.
+         vim.keymap.set("n", "<leader>n", function()
+            Snacks.picker.notifications()
+         end, { desc = "[n]otification history" })
+
          -- [s]earch
          vim.keymap.set("n", "<leader>sf", function()
             Snacks.picker.smart()
