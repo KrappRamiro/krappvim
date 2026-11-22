@@ -42,6 +42,7 @@ let
     random = nullInt null "Si se pone N, snacks elige una de N salidas cacheadas en cada arranque.";
     animated = bool false "Programa que se anima: no se cachea y queda vivo.";
     title = nullStr null "Título encima de la sección.";
+    indent = int 0 "Columnas de margen a la izquierda.";
     packages = packagesOpt;
   };
 
@@ -74,6 +75,8 @@ let
       text = str "krapp.vim" "Texto a dibujar.";
       font = str "future" "Fuente de toilet.";
       filter = nullStr "gay" "Filtro de color de toilet (gay, metal, border y otros).";
+      height = int 4 "Alto, en líneas.";
+      indent = int 14 "Columnas de margen a la izquierda (para centrarlo).";
     };
     image = {
       path = pathOpt snowflake "Imagen (píxeles reales, protocolo kitty).";
@@ -91,6 +94,7 @@ let
       morning = str "toilet -f smblock --metal 'buen dia'" "Comando de 6 a 13.";
       afternoon = str "toilet -f smblock -F border 'buenas tardes'" "Comando desde las 13.";
       height = int 4 "Alto de la sección, en líneas.";
+      indent = int 4 "Columnas de margen a la izquierda.";
     };
     cmd = cmdOptions;
     none = { };

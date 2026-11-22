@@ -142,11 +142,15 @@
                 nativeBuildInputs = [
                   kvim
                   pkgs.git
+                  # el test del dashboard arma un header figlet sobre el
+                  # kvim por defecto, que no trae figlet
+                  pkgs.figlet
                 ];
               }
               ''
                 export HOME=$TMPDIR
                 kvim --headless -c "luafile ${self}/scripts/smoke.lua"
+                kvim --headless -c "luafile ${self}/scripts/dashboard-test.lua"
                 touch $out
               '';
         }
