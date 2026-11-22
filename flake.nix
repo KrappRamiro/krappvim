@@ -38,6 +38,22 @@
     flake = false;
   };
 
+  # drop.nvim: hojas, nieve y otras cosas que caen sobre el dashboard. No
+  # está en nixpkgs. Solo entra al build si settings.dashboard lo pide.
+  inputs.plugins-drop = {
+    url = "github:folke/drop.nvim";
+    flake = false;
+  };
+
+  # Registro de splashes de milli (aurora, flyingdragon y otros). milli los
+  # baja con curl en runtime; acá los traemos en el build, sin red. No lleva
+  # el prefijo plugins- porque no es un plugin: nix/dashboard/deps.nix copia
+  # solo los splashes elegidos.
+  inputs.milli-splashes = {
+    url = "github:amansingh-afk/milli-splashes";
+    flake = false;
+  };
+
   outputs =
     {
       self,
@@ -106,13 +122,19 @@
                 touch $out
               '';
           # opciones de settings.dashboard: presets, kinds y lo que llega a Lua
+          # (el test devuelve archivos que tienen que existir en el build)
           dashboard-eval =
-            assert import ./tests/dashboard-eval.nix {
-              krappvim = self.wrappers.neovim;
-              inherit (pkgs) lib;
-              inherit pkgs;
-            };
-            pkgs.runCommand "krappvim-dashboard-eval" { } "touch $out";
+            let
+              files = import ./tests/dashboard-eval.nix {
+                krappvim = self.wrappers.neovim;
+                inherit (pkgs) lib;
+                inherit pkgs;
+              };
+            in
+            pkgs.runCommand "krappvim-dashboard-eval" { } ''
+              for f in ${toString files}; do test -f "$f"; done
+              touch $out
+            '';
           # arranca kvim headless y carga los plugins lazy (scripts/smoke.lua)
           smoke =
             pkgs.runCommand "krappvim-smoke"

@@ -9,7 +9,7 @@ inputs:
 {
   imports = [
     wlib.wrapperModules.neovim
-    ./nix/dashboard
+    (import ./nix/dashboard inputs)
   ];
   # NOTE: see the tips and tricks section or the bottom of this file + flake inputs to understand this value
   options.nvim-lib.neovimPlugins = lib.mkOption {
@@ -207,7 +207,8 @@ inputs:
       promise-async
       # Estos los traemos via flake.nix (no están en nixpkgs)
       config.nvim-lib.neovimPlugins.tiny-inline-diagnostic
-      config.nvim-lib.neovimPlugins.milli
+      # milli (splash del dashboard) se agrega en nix/dashboard/deps.nix,
+      # solo si el dashboard elegido lo usa.
       config.nvim-lib.neovimPlugins.tiny-code-action
       config.nvim-lib.neovimPlugins.mind
       # colorizer: highlightea color codes inline (#FF0000 con fondo rojo, etc)

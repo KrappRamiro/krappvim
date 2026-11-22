@@ -1,6 +1,7 @@
 # Tests de evaluación de `settings.dashboard`: arman la config de kvim con
 # distintas opciones (sin construir nada) y revisan lo que le llega a Lua.
-# Si algo falla, el `throw` lista los nombres de los tests rotos.
+# Si algo falla, el `throw` lista los nombres de los tests rotos. Si pasa,
+# devuelve archivos que el check tiene que encontrar en el build.
 {
   krappvim,
   lib,
@@ -30,6 +31,20 @@ let
       image = { };
     };
   };
+  # Config completa (specs, runtimePkgs), para ver qué entra al build
+  noConfig = eval { };
+  figletCfg = eval { settings.dashboard.header.kind = "figlet"; };
+  bonsaiCfg = eval { settings.dashboard.panel = [ { kind = "cbonsai"; } ]; };
+  auroraCfg = eval { settings.dashboard.header.milli.splash = "aurora"; };
+  screensaverCfg = eval {
+    settings.dashboard = {
+      header.kind = "text";
+      extras.screensaver.enable = true;
+    };
+  };
+  # runtimePkgs guarda entradas DAG ({ data; name; ... }), no paquetes
+  hasPkg = cfg: p: builtins.elem "${p}" (map (e: toString e.data) cfg.runtimePkgs);
+
   bad = builtins.tryEval (builtins.deepSeq (dash { settings.dashboard.header.kind = "nope"; }) true);
 
   tests = {
@@ -55,10 +70,21 @@ let
     image_default_path = lib.hasPrefix "${pkgs.nixos-icons}/" image.header.image.path;
 
     bad_kind_fails = !bad.success;
+
+    deps_default_no_cbonsai = !(hasPkg noConfig pkgs.cbonsai);
+    deps_default_no_chafa = !(hasPkg noConfig pkgs.chafa);
+    deps_default_no_drop = !noConfig.specs.dashboard-drop.enable;
+    deps_default_milli = noConfig.specs.dashboard-milli.enable;
+    deps_default_no_registry = !noConfig.specs.dashboard-milli-registry.enable;
+    deps_figlet_no_milli = !figletCfg.specs.dashboard-milli.enable;
+    deps_figlet_has_figlet = hasPkg figletCfg pkgs.figlet;
+    deps_cbonsai = hasPkg bonsaiCfg pkgs.cbonsai;
+    deps_aurora_registry = auroraCfg.specs.dashboard-milli-registry.enable;
+    deps_screensaver_milli = screensaverCfg.specs.dashboard-milli.enable;
   };
   failed = builtins.attrNames (lib.filterAttrs (_: ok: !ok) tests);
 in
 if failed == [ ] then
-  true
+  [ "${auroraCfg.specs.dashboard-milli-registry.data}/lua/milli/splashes/aurora.lua" ]
 else
   throw "dashboard-eval: fallaron ${builtins.concatStringsSep ", " failed}"

@@ -5,6 +5,10 @@
 #   }
 #
 # La guía con cada opción está en docs/dashboard/README.md.
+#
+# Recibe los inputs del flake (como module.nix) porque deps.nix necesita
+# las fuentes de milli y de su registro de splashes.
+inputs:
 {
   config,
   lib,
@@ -59,6 +63,8 @@ let
   dash = config.settings.dashboard;
 in
 {
+  imports = [ (import ./deps.nix inputs) ];
+
   options.settings.dashboard = lib.mkOption {
     description = "Qué dashboard muestra kvim al arrancar.";
     default = { };
