@@ -54,15 +54,19 @@ driver that does one step per `vim.defer_fn` so Neovim redraws in between,
 and writes results to a file:
 
 ```sh
-OUT=$PWD/out.txt script -qfc "stty rows 40 cols 120; ./result/bin/kvim file.rs -c 'luafile driver.lua'" /dev/null
+OUT=$PWD/out.txt script -qfc "stty rows 40 cols 120; timeout --foreground 60 ./result/bin/kvim -n file.rs -c 'luafile driver.lua'" /dev/null
 ```
+
+`--foreground` is required: without it `timeout` moves kvim out of the
+terminal's foreground group and the TUI never reads input. `-n` skips the
+swap file: a killed test run leaves one, and its prompt blocks the next run.
 
 - Never run `kvim` without `--headless` or `script` from a tool: it waits
   for a terminal and hangs the shell.
 - `timeout ... script -qfc "kvim ..."` only kills `script`: the real editor
   (`kvim --embed`) and its rust-analyzer survive as orphans and eat CPU and
-  gigabytes of RAM. Put `timeout` inside the command
-  (`script -qfc "timeout 30 kvim ..."`), give every driver a hard exit
+  gigabytes of RAM. Put `timeout --foreground` inside the command (as
+  above), give every driver a hard exit
   (`vim.defer_fn(function() vim.cmd("qa!") end, 20000)`) that runs even if a
   step fails, and after testing run
   `ps -eo pid,ppid,args | grep '[k]vim --embed'` and kill leftovers by PID.
