@@ -71,7 +71,12 @@ let
     pokemon = [ pokemon-colorscripts ];
     krabby = [ krabby ];
     fastfetch = [ fastfetch ];
-    github = [ gh ];
+    # git va al final del PATH: si el sistema tiene uno, gana ese
+    github = [
+      gh
+      git
+    ];
+    git = [ git ];
     colorscript = [ dwt1-shell-color-scripts ];
     fortune = [
       fortune

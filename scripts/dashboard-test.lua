@@ -340,6 +340,35 @@ function tests.test_ministarter_disables_snacks()
    )
 end
 
+-- El hook de image corre dentro de SnacksDashboardOpened, que al arrancar
+-- dispara snacks en pleno startup. La detección de la terminal de snacks
+-- hace vim.wait(): ahí adentro corren callbacks de otros plugins antes de
+-- tiempo (el colorscheme) y el dashboard quedaba vacío. El hook tiene que
+-- diferir la detección.
+function tests.test_image_hook_does_not_wait()
+   local opts, hooks =
+      build({ header = { kind = "image", image = { path = "/x.png", width = 10, height = 5 } } })
+   check(#hooks == 1, "image no registró hook")
+   local img = Snacks.image
+   local orig_supports, orig_detect = img.supports_terminal, img.terminal.detect
+   local sync = 0
+   img.supports_terminal = function()
+      sync = sync + 1
+      return false
+   end
+   img.terminal.detect = function(cb)
+      if not cb then
+         sync = sync + 1
+      end
+   end
+   local buf = vim.api.nvim_create_buf(false, true)
+   hooks[1]({ buf = buf, win = vim.api.nvim_get_current_win() })
+   img.supports_terminal, img.terminal.detect = orig_supports, orig_detect
+   vim.api.nvim_buf_delete(buf, { force = true })
+   check(sync == 0, "el hook detectó la terminal de forma síncrona (vim.wait)")
+   check(opts.sections ~= nil, "sin secciones")
+end
+
 -- Corre todos en orden alfabético para que la salida sea estable.
 local names = vim.tbl_keys(tests)
 table.sort(names)

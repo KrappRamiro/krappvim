@@ -154,6 +154,53 @@
                 touch $out
               '';
         }
+        # checks.dashboard-<preset>: kvim armado con cada preset arma su
+        # dashboard sin error y tiene en el PATH cada programa que corre
+        # (scripts/dashboard-check.lua). dashboard-extras prueba drop,
+        # cellular-automaton, el protector de pantalla y un splash del
+        # registro de milli, que ningún preset prende.
+        // (
+          let
+            dashboardCheck =
+              name: dashboard:
+              let
+                kvimWith = self.wrappers.neovim.wrap [
+                  { inherit pkgs; }
+                  { settings = { inherit dashboard; }; }
+                ];
+              in
+              pkgs.runCommand "krappvim-dashboard-${name}" { nativeBuildInputs = [ kvimWith ]; } ''
+                export HOME=$TMPDIR
+                kvim --headless -c "luafile ${self}/scripts/dashboard-check.lua"
+                touch $out
+              '';
+            presets = builtins.attrNames (
+              import ./nix/dashboard/presets.nix {
+                inherit (pkgs) lib;
+                inherit pkgs;
+              }
+            );
+          in
+          builtins.listToAttrs (
+            map (p: {
+              name = "dashboard-${p}";
+              value = dashboardCheck p { preset = p; };
+            }) presets
+          )
+          // {
+            dashboard-extras = dashboardCheck "extras" {
+              header.milli.splash = "aurora";
+              overlay.drop = {
+                enable = true;
+                theme = "snow";
+              };
+              extras = {
+                screensaver.enable = true;
+                cellularAutomaton.enable = true;
+              };
+            };
+          }
+        )
       );
       # `wrappers.neovim.enable = true`
       nixosModules = {

@@ -1,8 +1,10 @@
 -- If you ask yourself "hey, why are you returning an object", its because this will be loaded by lze specs. and lze specs expects an object
 return {
-   -- milli.nvim: animated ASCII splash usado por el dashboard de snacks abajo.
+   -- milli.nvim: splash animado del dashboard (lua/dashboard/header/milli.lua).
    -- Lo cargamos eager con priority > snacks (1000) para garantizar que
    -- esté en runtimepath antes de que snacks corra su `after` y lo requiera.
+   -- Solo está en el build si el dashboard lo usa (nix/dashboard/deps.nix);
+   -- si no, auto_enable hace que lze ignore esta spec.
    -- Spec name "milli" (no "milli.nvim") porque lze matchea por exact name
    -- en su on_require hook.
    {
@@ -22,14 +24,6 @@ return {
       after = function(_)
          -- Define colors for indent
          vim.api.nvim_set_hl(0, "MySnacksIndent", { fg = "#32a88f" })
-
-         -- milli.nvim: animated ASCII splash para el dashboard.
-         -- Cargamos el primer frame para usarlo como header "anchor" - milli
-         -- lo necesita para localizar dónde animar después del setup.
-         -- El nombre del splash tiene que coincidir con el de milli.snacks() abajo.
-         local SPLASH = "blackhole"
-         local milli_splash = require("milli").load({ splash = SPLASH })
-         local splash_header = table.concat(milli_splash.frames[1], "\n")
 
          require("snacks").setup({
             -- Detecta archivos grandes (>1.5MB por default) y desactiva treesitter,
@@ -166,56 +160,10 @@ return {
                },
                refresh = 50, -- refresh at most every 50ms
             },
-            dashboard = {
-               preset = {
-                  -- frame 0 del splash; milli después anima sobre estas mismas líneas
-                  header = splash_header,
-                  keys = {
-                     {
-                        icon = " ",
-                        key = "f",
-                        desc = "Find File",
-                        action = ":lua Snacks.picker.smart()",
-                     },
-                     {
-                        icon = " ",
-                        key = "n",
-                        desc = "New File",
-                        action = ":ene | startinsert",
-                     },
-                     {
-                        icon = " ",
-                        key = "g",
-                        desc = "Grep",
-                        action = ":lua Snacks.picker.grep()",
-                     },
-                     {
-                        icon = " ",
-                        key = "r",
-                        desc = "Recent Files",
-                        action = ":lua Snacks.picker.recent()",
-                     },
-                     { icon = " ", key = "q", desc = "Quit", action = ":qa" },
-                  },
-               },
-               sections = {
-                  { section = "header" },
-                  {
-                     text = { { "── krapp.vim ──", hl = "SnacksDashboardTitle" } },
-                     align = "center",
-                     padding = 1,
-                  },
-                  { section = "keys", gap = 1, padding = 1 },
-                  { section = "recent_files", indent = 2, padding = 1 },
-                  {
-                     text = {
-                        { "Neovim v" .. tostring(vim.version()), hl = "SnacksDashboardFooter" },
-                     },
-                     align = "center",
-                     padding = 1,
-                  },
-               },
-            },
+            -- El dashboard sale de settings.dashboard (Nix): lua/dashboard arma
+            -- la tabla y registra lo que corre al abrirlo (milli, imagen).
+            -- Guía: docs/dashboard/README.md
+            dashboard = require("dashboard").setup(),
             -- make sure lazygit always reopens the correct program
             -- hopefully this can be removed one day
             lazygit = {
@@ -235,11 +183,6 @@ return {
                },
             },
          })
-
-         -- Arranca la animación del splash sobre el header del dashboard.
-         -- Tiene que correr DESPUÉS de Snacks.setup() para que el buffer del
-         -- dashboard exista y milli encuentre el anchor (frame 0 = splash_header).
-         require("milli").snacks({ splash = SPLASH, loop = true })
 
          -- Al cerrar el último buffer (`:bdelete`, `<leader><leader>d`) Neovim
          -- deja un `[No Name]` vacío. Si eso es lo único que queda, volvemos
@@ -268,7 +211,12 @@ return {
                      -- ventana actuales, igual que al arrancar. Snacks marca el
                      -- buffer unlisted + bufhidden=wipe, así no queda un
                      -- `[No Name]` colgado en la lista de buffers.
-                     Snacks.dashboard({ buf = 0, win = 0 })
+                     if Snacks.config.dashboard.enabled == false then
+                        -- preset ministarter: el dashboard es mini.starter
+                        require("mini.starter").open()
+                     else
+                        Snacks.dashboard({ buf = 0, win = 0 })
+                     end
                   end
                end)
             end,
