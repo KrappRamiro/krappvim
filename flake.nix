@@ -188,6 +188,39 @@
             }) presets
           )
           // {
+            # Cada bloque `nix` de docs/dashboard/README.md que empieza con
+            # `settings.dashboard` tiene que evaluar: así la guía no queda
+            # vieja cuando cambian las opciones. Solo se evalúa (drvPath),
+            # no se arma un kvim por ejemplo. Las rutas de ejemplo de la
+            # guía (./avatar.png) se cambian por archivos del repo.
+            dashboard-docs =
+              let
+                inherit (pkgs) lib;
+                guide = builtins.readFile ./docs/dashboard/README.md;
+                blocks = map (b: builtins.head (lib.splitString "```" b)) (
+                  builtins.tail (lib.splitString "```nix\n" guide)
+                );
+                snippets = builtins.filter (b: lib.hasPrefix "settings.dashboard" (lib.trim b)) (
+                  map lib.trim blocks
+                );
+                fixtures =
+                  builtins.replaceStrings
+                    [ "./avatar.png" "./mi-splash.lua" ]
+                    [ "${self}/docs/dashboard/media/doom.jpg" "${self}/scripts/fixtures/splash.lua" ];
+                evalSnippet =
+                  i: text:
+                  let
+                    snippet = import (builtins.toFile "dashboard-doc-${toString i}.nix" "pkgs: { ${fixtures text} }");
+                  in
+                  (kvim.wrap (snippet pkgs)).drvPath;
+                drvs = lib.imap1 evalSnippet snippets;
+              in
+              assert lib.assertMsg (
+                builtins.length snippets >= 15
+              ) "dashboard-docs: se esperaban 15 ejemplos o más, hay ${toString (builtins.length snippets)}";
+              pkgs.runCommand "krappvim-dashboard-docs" { } ''
+                echo ${toString (map builtins.unsafeDiscardStringContext drvs)} > $out
+              '';
             dashboard-extras = dashboardCheck "extras" {
               header.milli.splash = "aurora";
               overlay.drop = {

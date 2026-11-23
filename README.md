@@ -3,6 +3,9 @@
 Personal Neovim configuration built with [nix-wrapper-modules](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/neovim.html).
 Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 
+The startup dashboard is configurable from Nix with `settings.dashboard`: see the
+[dashboard guide](docs/dashboard/README.md) (in Spanish).
+
 ---
 
 ## Plugins
@@ -29,6 +32,8 @@ Lazy-loaded via [lze](https://github.com/BirdeeHub/lze).
 | [which-key.nvim](https://github.com/folke/which-key.nvim) | Popup showing available keybindings as you type a prefix |
 | [tiny-inline-diagnostic](https://github.com/rachartier/tiny-inline-diagnostic.nvim) | Pretty inline diagnostics rendered next to the offending line |
 | [milli.nvim](https://github.com/Amansingh-afk/milli.nvim) | Animated ASCII splash screen for the snacks dashboard |
+| [drop.nvim](https://github.com/folke/drop.nvim) | Leaves, snow and other things falling over the dashboard (only if `settings.dashboard.overlay.drop` enables it) |
+| [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim) | Joke key that melts the buffer (only if `settings.dashboard.extras.cellularAutomaton` enables it) |
 
 ### Navigation & Search
 
