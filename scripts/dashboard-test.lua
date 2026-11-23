@@ -369,6 +369,81 @@ function tests.test_image_hook_does_not_wait()
    check(opts.sections ~= nil, "sin secciones")
 end
 
+-- Snacks.image.placement.new con una imagen todavía sin convertir (la
+-- primera vez, sin caché) borra el buffer para mostrar "loading", y el
+-- dashboard quedaba vacío. El hook espera a que la imagen esté lista.
+function tests.test_image_waits_until_ready()
+   local _, hooks =
+      build({ header = { kind = "image", image = { path = "/x.png", width = 10, height = 5 } } })
+   local img = Snacks.image
+   local orig = {
+      supports = img.supports_terminal,
+      detect = img.terminal.detect,
+      new = img.image.new,
+      placement = img.placement.new,
+   }
+   local ready, placed = false, 0
+   img.supports_terminal = function()
+      return true
+   end
+   img.terminal.detect = function(cb)
+      cb()
+   end
+   img.image.new = function()
+      return {
+         ready = function()
+            return ready
+         end,
+         failed = function()
+            return false
+         end,
+      }
+   end
+   img.placement.new = function()
+      placed = placed + 1
+   end
+   local buf = vim.api.nvim_create_buf(false, true)
+   vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "", "", "", "título" })
+   local ok, err = pcall(function()
+      hooks[1]({ buf = buf, win = vim.api.nvim_get_current_win() })
+      vim.wait(200)
+      check(placed == 0, "puso la imagen antes de que esté lista")
+      ready = true
+      vim.wait(1000, function()
+         return placed > 0
+      end)
+      check(placed == 1, "no puso la imagen cuando estuvo lista")
+   end)
+   img.supports_terminal, img.terminal.detect = orig.supports, orig.detect
+   img.image.new, img.placement.new = orig.new, orig.placement
+   vim.api.nvim_buf_delete(buf, { force = true })
+   assert(ok, err)
+end
+
+-- Neovim marca con "[Process exited 0]" (virtual text) cada terminal que
+-- termina. snacks muestra la terminal en vivo la primera vez que corre un
+-- comando y cuando vence el caché, y el cartel quedaba sobre el dashboard.
+-- En las terminales del dashboard se borra; en las demás queda.
+function tests.test_exit_message_hidden_in_dashboard()
+   require("dashboard").hide_exit_message()
+   local ns = vim.api.nvim_create_namespace("nvim.terminal.exitmsg")
+   local function run(ft)
+      local buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_call(buf, function()
+         vim.fn.jobstart("true", { term = true })
+      end)
+      vim.bo[buf].filetype = ft
+      vim.wait(2000, function()
+         return #vim.api.nvim_buf_get_extmarks(buf, ns, 0, -1, {}) > 0
+      end)
+      -- Deja correr lo diferido (el borrado es asíncrono).
+      vim.wait(300)
+      return #vim.api.nvim_buf_get_extmarks(buf, ns, 0, -1, {})
+   end
+   check(run("snacks_dashboard") == 0, "el cartel quedó en la terminal del dashboard")
+   check(run("") > 0, "se borró el cartel de una terminal común")
+end
+
 -- Corre todos en orden alfabético para que la salida sea estable.
 local names = vim.tbl_keys(tests)
 table.sort(names)

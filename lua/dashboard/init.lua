@@ -195,6 +195,29 @@ function M.build(cfg, ctx)
    return opts, hooks
 end
 
+-- Neovim escribe "[Process exited 0]" (virtual text, ver :h terminal-config)
+-- en cada terminal que termina. snacks muestra la terminal en vivo la
+-- primera vez que corre un comando y cada vez que vence el caché, así que
+-- el cartel quedaba encima del dashboard. Se borra solo en las terminales
+-- del dashboard. Diferido porque snacks les pone el filetype en el
+-- on_exit del job, que puede llegar después del TermClose.
+function M.hide_exit_message()
+   local ns = vim.api.nvim_create_namespace("nvim.terminal.exitmsg")
+   vim.api.nvim_create_autocmd("TermClose", {
+      group = vim.api.nvim_create_augroup("krapp_dashboard_exitmsg", { clear = true }),
+      callback = function(ev)
+         vim.defer_fn(function()
+            if
+               vim.api.nvim_buf_is_valid(ev.buf)
+               and vim.bo[ev.buf].filetype == "snacks_dashboard"
+            then
+               vim.api.nvim_buf_clear_namespace(ev.buf, ns, 0, -1)
+            end
+         end, 50)
+      end,
+   })
+end
+
 -- Lo que llama lua/lze_specs/snacks.lua: devuelve el `dashboard = { ... }`
 -- de Snacks.setup y deja registrados los hooks de apertura. `cfg` es para
 -- los tests; normalmente viene de Nix.
@@ -212,6 +235,7 @@ function M.setup(cfg)
       return { enabled = false }
    end
    local opts, hooks = M.build(cfg, { columns = vim.o.columns })
+   M.hide_exit_message()
    if #hooks > 0 then
       vim.api.nvim_create_autocmd("User", {
          group = vim.api.nvim_create_augroup("krapp_dashboard_hooks", { clear = true }),
